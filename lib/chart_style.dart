@@ -1,57 +1,88 @@
 import 'package:flutter/material.dart' show Color;
 
 class ChartColors {
-  List<Color> bgColor = [Color(0xff18191d), Color(0xff18191d)];
+  ChartColors({
+    this.bgColor = const [Color(0xff18191d), Color(0xff18191d)],
+    this.kLineColor = const Color(0xff4C86CD),
+    this.lineFillColor = const Color(0x554C86CD),
+    this.ma5Color = const Color(0xffC9B885),
+    this.ma10Color = const Color(0xff6CB0A6),
+    this.ma30Color = const Color(0xff9979C6),
+    this.upColor = const Color(0xff4DAA90),
+    this.dnColor = const Color(0xffC15466),
+    this.volColor = const Color(0xff4729AE),
+    this.macdColor = const Color(0xff4729AE),
+    this.difColor = const Color(0xffC9B885),
+    this.deaColor = const Color(0xff6CB0A6),
+    this.kColor = const Color(0xffC9B885),
+    this.dColor = const Color(0xff6CB0A6),
+    this.jColor = const Color(0xff9979C6),
+    this.rsiColor = const Color(0xffC9B885),
+    this.defaultTextColor = const Color(0xff60738E),
+    this.nowPriceUpColor = const Color(0xff4DAA90),
+    this.nowPriceDnColor = const Color(0xffC15466),
+    this.nowPriceTextColor = const Color(0xffffffff),
+    this.depthBuyColor = const Color(0xff60A893),
+    this.depthSellColor = const Color(0xffC15866),
+    this.selectBorderColor = const Color(0xff6C7A86),
+    this.selectFillColor = const Color(0xff0D1722),
+    this.gridColor = const Color(0xff4c5c74),
+    this.infoWindowNormalColor = const Color(0xffffffff),
+    this.infoWindowTitleColor = const Color(0xffffffff),
+    this.infoWindowUpColor = const Color(0xff00ff00),
+    this.infoWindowDnColor = const Color(0xffff0000),
+    this.hCrossColor = const Color(0xffffffff),
+    this.vCrossColor = const Color(0x1Effffff),
+    this.crossTextColor = const Color(0xffffffff),
+    this.maxColor = const Color(0xffffffff),
+    this.minColor = const Color(0xffffffff),
+  });
 
-  Color kLineColor = Color(0xff4C86CD);
-  Color lineFillColor = Color(0x554C86CD);
-  Color ma5Color = Color(0xffC9B885);
-  Color ma10Color = Color(0xff6CB0A6);
-  Color ma30Color = Color(0xff9979C6);
-  Color upColor = Color(0xff4DAA90);
-  Color dnColor = Color(0xffC15466);
-  Color volColor = Color(0xff4729AE);
+  final List<Color> bgColor;
+  final Color kLineColor;
+  final Color lineFillColor;
+  final Color ma5Color;
+  final Color ma10Color;
+  final Color ma30Color;
+  final Color upColor;
+  final Color dnColor;
+  final Color volColor;
 
-  Color macdColor = Color(0xff4729AE);
-  Color difColor = Color(0xffC9B885);
-  Color deaColor = Color(0xff6CB0A6);
+  final Color macdColor;
+  final Color difColor;
+  final Color deaColor;
 
-  Color kColor = Color(0xffC9B885);
-  Color dColor = Color(0xff6CB0A6);
-  Color jColor = Color(0xff9979C6);
-  Color rsiColor = Color(0xffC9B885);
+  final Color kColor;
+  final Color dColor;
+  final Color jColor;
+  final Color rsiColor;
 
-  Color defaultTextColor = Color(0xff60738E);
+  final Color defaultTextColor;
 
-  Color nowPriceUpColor = Color(0xff4DAA90);
-  Color nowPriceDnColor = Color(0xffC15466);
-  Color nowPriceTextColor = Color(0xffffffff);
+  final Color nowPriceUpColor;
+  final Color nowPriceDnColor;
+  final Color nowPriceTextColor;
 
-  //深度颜色
-  Color depthBuyColor = Color(0xff60A893);
-  Color depthSellColor = Color(0xffC15866);
+  final Color depthBuyColor;
+  final Color depthSellColor;
 
-  //选中后显示值边框颜色
-  Color selectBorderColor = Color(0xff6C7A86);
+  final Color selectBorderColor;
 
-  //选中后显示值背景的填充颜色
-  Color selectFillColor = Color(0xff0D1722);
+  final Color selectFillColor;
 
-  //分割线颜色
-  Color gridColor = Color(0xff4c5c74);
+  final Color gridColor;
 
-  Color infoWindowNormalColor = Color(0xffffffff);
-  Color infoWindowTitleColor = Color(0xffffffff);
-  Color infoWindowUpColor = Color(0xff00ff00);
-  Color infoWindowDnColor = Color(0xffff0000);
+  final Color infoWindowNormalColor;
+  final Color infoWindowTitleColor;
+  final Color infoWindowUpColor;
+  final Color infoWindowDnColor;
 
-  Color hCrossColor = Color(0xffffffff);
-  Color vCrossColor = Color(0x1Effffff);
-  Color crossTextColor = Color(0xffffffff);
+  final Color hCrossColor;
+  final Color vCrossColor;
+  final Color crossTextColor;
 
-  //当前显示内最大和最小值的颜色
-  Color maxColor = Color(0xffffffff);
-  Color minColor = Color(0xffffffff);
+  final Color maxColor;
+  final Color minColor;
 
   Color getMAColor(int index) {
     switch (index % 3) {
@@ -66,46 +97,46 @@ class ChartColors {
 }
 
 class ChartStyle {
-  double topPadding = 30.0;
+  ChartStyle({
+    this.topPadding = 30.0,
+    this.bottomPadding = 20.0,
+    this.childPadding = 12.0,
+    this.pointWidth = 11.0,
+    this.candleWidth = 8.5,
+    this.candleLineWidth = 1.5,
+    this.volWidth = 8.5,
+    this.macdWidth = 3.0,
+    this.vCrossWidth = 8.5,
+    this.hCrossWidth = 0.5,
+    this.nowPriceLineLength = 1,
+    this.nowPriceLineSpan = 1,
+    this.nowPriceLineWidth = 1,
+    this.gridRows = 4,
+    this.gridColumns = 4,
+    this.dateTimeFormat,
+  });
 
-  double bottomPadding = 20.0;
+  final double topPadding;
+  final double bottomPadding;
+  final double childPadding;
+  final double pointWidth;
+  final double candleWidth;
+  final double candleLineWidth;
+  final double volWidth;
+  final double macdWidth;
+  final double vCrossWidth;
 
-  double childPadding = 12.0;
+  final double hCrossWidth;
 
-  //点与点的距离
-  double pointWidth = 11.0;
+  final int nowPriceLineLength;
 
-  //蜡烛宽度
-  double candleWidth = 8.5;
+  final int nowPriceLineSpan;
 
-  //蜡烛中间线的宽度
-  double candleLineWidth = 1.5;
+  final double nowPriceLineWidth;
 
-  //vol柱子宽度
-  double volWidth = 8.5;
+  final int gridRows;
 
-  //macd柱子宽度
-  double macdWidth = 3.0;
+  final int gridColumns;
 
-  //垂直交叉线宽度
-  double vCrossWidth = 8.5;
-
-  //水平交叉线宽度
-  double hCrossWidth = 0.5;
-
-  //现在价格的线条长度
-  double nowPriceLineLength = 1;
-
-  //现在价格的线条间隔
-  double nowPriceLineSpan = 1;
-
-  //现在价格的线条粗细
-  double nowPriceLineWidth = 1;
-
-  int gridRows = 4;
-
-  int gridColumns = 4;
-
-  //下方時間客製化
-  List<String>? dateTimeFormat;
+  final List<String>? dateTimeFormat;
 }

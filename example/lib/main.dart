@@ -35,10 +35,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<KLineEntity>? datas;
   bool showLoading = true;
-  MainState _mainState = MainState.MA;
+  MainState _mainState = MainState.NONE;
   bool _volHidden = false;
   SecondaryState _secondaryState = SecondaryState.MACD;
-  bool isLine = true;
+  bool isLine = false;
   bool isChinese = true;
   bool _hideGrid = false;
   bool _showNowPrice = true;
@@ -56,12 +56,10 @@ class _MyHomePageState extends State<MyHomePage> {
       final parseJson = json.decode(result);
       final tick = parseJson['tick'] as Map<String, dynamic>;
       final List<DepthEntity> bids = (tick['bids'] as List<dynamic>)
-          .map<DepthEntity>(
-              (item) => DepthEntity(item[0] as double, item[1] as double))
+          .map<DepthEntity>((item) => DepthEntity(item[0] as double, item[1] as double))
           .toList();
       final List<DepthEntity> asks = (tick['asks'] as List<dynamic>)
-          .map<DepthEntity>(
-              (item) => DepthEntity(item[0] as double, item[1] as double))
+          .map<DepthEntity>((item) => DepthEntity(item[0] as double, item[1] as double))
           .toList();
       initDepth(bids, asks);
     });
@@ -93,88 +91,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      children: <Widget>[
-        Stack(children: <Widget>[
-          Container(
-            height: 450,
-            width: double.infinity,
-            child: KChartWidget(
-              datas,
-              chartStyle,
-              chartColors,
-              isLine: isLine,
-              mainState: _mainState,
-              volHidden: _volHidden,
-              secondaryState: _secondaryState,
-              fixedLength: 2,
-              timeFormat: TimeFormat.YEAR_MONTH_DAY,
-              translations: kChartTranslations,
-              showNowPrice: _showNowPrice,
-              //`isChinese` is Deprecated, Use `translations` instead.
-              isChinese: isChinese,
-              hideGrid: _hideGrid,
-              maDayList: [1, 100, 1000],
-            ),
-          ),
-          if (showLoading)
-            Container(
-                width: double.infinity,
-                height: 450,
-                alignment: Alignment.center,
-                child: const CircularProgressIndicator()),
-        ]),
-        buildButtons(),
-        if (_bids != null && _asks != null)
-          Container(
-            height: 230,
-            width: double.infinity,
-            child: DepthChart(_bids!, _asks!, chartColors),
-          )
-      ],
-    );
-  }
-
-  Widget buildButtons() {
-    return Wrap(
-      alignment: WrapAlignment.spaceEvenly,
-      children: <Widget>[
-        button("Time Mode", onPressed: () => isLine = true),
-        button("K Line Mode", onPressed: () => isLine = false),
-        button("Line:MA", onPressed: () => _mainState = MainState.MA),
-        button("Line:BOLL", onPressed: () => _mainState = MainState.BOLL),
-        button("Hide Line", onPressed: () => _mainState = MainState.NONE),
-        button("Secondary Chart:MACD", onPressed: () => _secondaryState = SecondaryState.MACD),
-        button("Secondary Chart:KDJ", onPressed: () => _secondaryState = SecondaryState.KDJ),
-        button("Secondary Chart:RSI", onPressed: () => _secondaryState = SecondaryState.RSI),
-        button("Secondary Chart:WR", onPressed: () => _secondaryState = SecondaryState.WR),
-        button("Secondary Chart:CCI", onPressed: () => _secondaryState = SecondaryState.CCI),
-        button("Secondary Chart:Hide", onPressed: () => _secondaryState = SecondaryState.NONE),
-        button(_volHidden ? "Show Vol" : "Hide Vol",
-            onPressed: () => _volHidden = !_volHidden),
-        button("Change Language", onPressed: () => isChinese = !isChinese),
-        button(_hideGrid ? "Show Grid" : "Hide Grid",
-            onPressed: () => _hideGrid = !_hideGrid),
-        button(_showNowPrice ? "Hide Now Price" : "Show Now Price",
-            onPressed: () => _showNowPrice = !_showNowPrice),
-        button("Customize UI", onPressed: () {
-          setState(() {
-            this.isChangeUI = !this.isChangeUI;
-            if(this.isChangeUI) {
-              chartColors.selectBorderColor = Colors.red;
-              chartColors.selectFillColor = Colors.red;
-              chartColors.lineFillColor = Colors.red;
-              chartColors.kLineColor = Colors.yellow;
-            } else {
-              chartColors.selectBorderColor = Color(0xff6C7A86);
-              chartColors.selectFillColor = Color(0xff0D1722);
-              chartColors.lineFillColor = Color(0x554C86CD);
-              chartColors.kLineColor = Color(0xff4C86CD);
-            }
-          });
-        }),
-      ],
+    return KChartWidget(
+      datas,
+      chartStyle,
+      chartColors,
+      isLine: isLine,
+      mainState: MainState.NONE,
+      volHidden: true,
+      secondaryState: SecondaryState.NONE,
+      fixedLength: 2,
+      timeFormat: TimeFormat.YEAR_MONTH_DAY,
+      showNowPrice: true,
+      hideGrid: _hideGrid,
+      maDayList: [1, 100, 1000],
     );
   }
 
@@ -222,8 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //获取火币数据，需要翻墙
   Future<String> getIPAddress(String? period) async {
-    var url =
-        'https://api.huobi.br.com/market/history/kline?period=${period ?? '1day'}&size=300&symbol=btcusdt';
+    var url = 'https://api.huobi.br.com/market/history/kline?period=${period ?? '1day'}&size=300&symbol=btcusdt';
     late String result;
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
