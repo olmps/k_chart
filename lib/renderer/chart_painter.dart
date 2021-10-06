@@ -29,6 +29,7 @@ class ChartPainter extends BaseChartPainter {
   final ChartStyle chartStyle;
   final bool hideGrid;
   final bool showNowPrice;
+  final double rightPadding;
 
   ChartPainter(
     this.chartStyle,
@@ -38,6 +39,7 @@ class ChartPainter extends BaseChartPainter {
     required scrollX,
     required isLongPass,
     required selectX,
+    required this.rightPadding,
     mainState,
     volHidden,
     secondaryState,
@@ -49,16 +51,19 @@ class ChartPainter extends BaseChartPainter {
     this.fixedLength = 2,
     this.maDayList = const [5, 10, 20],
   })  : assert(bgColor == null || bgColor.length >= 2),
-        super(chartStyle,
-            datas: datas,
-            scaleX: scaleX,
-            scrollX: scrollX,
-            isLongPress: isLongPass,
-            selectX: selectX,
-            mainState: mainState,
-            volHidden: volHidden,
-            secondaryState: secondaryState,
-            isLine: isLine) {
+        super(
+          chartStyle,
+          datas: datas,
+          scaleX: scaleX,
+          scrollX: scrollX,
+          isLongPress: isLongPass,
+          selectX: selectX,
+          mainState: mainState,
+          volHidden: volHidden,
+          secondaryState: secondaryState,
+          rightPadding: rightPadding,
+          isLine: isLine,
+        ) {
     selectPointPaint = Paint()
       ..isAntiAlias = true
       ..strokeWidth = 0.5
@@ -139,6 +144,8 @@ class ChartPainter extends BaseChartPainter {
   @override
   void drawChart(Canvas canvas, Size size) {
     canvas.save();
+    canvas
+        .clipRect(Rect.fromLTRB(0, 0, size.width - rightPadding, size.height));
     canvas.translate(mTranslateX * scaleX, 0.0);
     canvas.scale(scaleX, 1.0);
     for (int i = mStartIndex; datas != null && i <= mStopIndex; i++) {
@@ -309,7 +316,7 @@ class ChartPainter extends BaseChartPainter {
   }
 
   @override
-  void drawNowPrice(Canvas canvas) {
+  void drawNowPrice(Canvas canvas, Size size) {
     if (!this.showNowPrice) {
       return;
     }
@@ -320,26 +327,35 @@ class ChartPainter extends BaseChartPainter {
 
     double value = datas!.last.close;
     double y = getMainY(value);
-    //不在视图展示区域不绘制
+    // Do not draw in the view display area
     if (y > getMainY(mMainLowMinValue) || y < getMainY(mMainHighMaxValue)) {
       return;
     }
     nowPricePaint
-      ..color = value >= datas!.last.open ? this.chartColors.nowPriceUpColor : this.chartColors.nowPriceDnColor;
-    //先画横线
+      ..color = value >= datas!.last.open
+          ? this.chartColors.nowPriceUpColor
+          : this.chartColors.nowPriceDnColor;
+    // Draw horizontal lines first
     double startX = 0;
     final max = -mTranslateX + mWidth / scaleX;
-    final space = this.chartStyle.nowPriceLineSpan + this.chartStyle.nowPriceLineLength;
+    final space =
+        this.chartStyle.nowPriceLineSpan + this.chartStyle.nowPriceLineLength;
     while (startX < max) {
-      canvas.drawLine(Offset(startX, y), Offset(startX + this.chartStyle.nowPriceLineLength, y), nowPricePaint);
+      canvas.drawLine(
+          Offset(startX, y),
+          Offset(startX + this.chartStyle.nowPriceLineLength, y),
+          nowPricePaint);
       startX += space;
     }
-    //再画背景和文本
-    TextPainter tp = getTextPainter(value.toStringAsFixed(fixedLength), this.chartColors.nowPriceTextColor);
-    double left = 0;
-    double top = y - tp.height / 2;
-    canvas.drawRect(Rect.fromLTRB(left, top, left + tp.width, top + tp.height), nowPricePaint);
-    tp.paint(canvas, Offset(0, top));
+    // Draw background and text again
+    TextPainter tp = getTextPainter(
+        value.toStringAsFixed(fixedLength), this.chartColors.nowPriceTextColor);
+
+    final textStart = size.width - tp.width;
+    final top = y - tp.height / 2;
+    canvas.drawRect(Rect.fromLTRB(textStart, top, size.width, top + tp.height),
+        nowPricePaint);
+    tp.paint(canvas, Offset(textStart, top));
   }
 
   ///画交叉线

@@ -39,6 +39,7 @@ abstract class BaseChartPainter extends CustomPainter {
   final ChartStyle chartStyle;
   late double mPointWidth;
   List<String> mFormats = [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn]; //格式化时间
+  final double rightPadding;
 
   BaseChartPainter(
     this.chartStyle, {
@@ -47,6 +48,7 @@ abstract class BaseChartPainter extends CustomPainter {
     required this.scrollX,
     required this.isLongPress,
     required this.selectX,
+    required this.rightPadding,
     this.mainState = MainState.MA,
     this.volHidden = false,
     this.secondaryState = SecondaryState.MACD,
@@ -109,7 +111,7 @@ abstract class BaseChartPainter extends CustomPainter {
 
       drawText(canvas, datas!.last, 5);
       drawMaxAndMin(canvas);
-      drawNowPrice(canvas);
+      drawNowPrice(canvas, size);
 
       if (isLongPress == true) {
         drawCrossLine(canvas, size);
@@ -143,7 +145,7 @@ abstract class BaseChartPainter extends CustomPainter {
   void drawMaxAndMin(Canvas canvas);
 
   //画当前价格
-  void drawNowPrice(Canvas canvas);
+  void drawNowPrice(Canvas canvas, Size size);
 
   //画交叉线
   void drawCrossLine(Canvas canvas, Size size);
@@ -293,8 +295,8 @@ abstract class BaseChartPainter extends CustomPainter {
     }
   }
 
-  ///根据索引索取x坐标
-  ///+ mPointWidth / 2防止第一根和最后一根k线显示不���
+  /// Ask for the x coordinate according to the index
+  ///+ mPointWidth / 2 - Prevent the display of the first and last bar from not being displayed.
   ///@param position 索引值
   double getX(int position) => position * mPointWidth + mPointWidth / 2;
 
@@ -308,11 +310,12 @@ abstract class BaseChartPainter extends CustomPainter {
   }
 
   ///scrollX 转换为 TranslateX
-  void setTranslateXFromScrollX(double scrollX) => mTranslateX = scrollX + getMinTranslateX();
+  void setTranslateXFromScrollX(double scrollX) =>
+      mTranslateX = scrollX + getMinTranslateX();
 
-  ///获取平移的最小值
+  /// Get the minimum value of translation
   double getMinTranslateX() {
-    var x = -mDataLen + mWidth / scaleX - mPointWidth / 2;
+    final x = (-mDataLen + (mWidth - rightPadding) / scaleX - mPointWidth / 2);
     return x >= 0 ? 0.0 : x;
   }
 

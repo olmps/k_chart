@@ -27,6 +27,7 @@ class KChartWidget extends StatefulWidget {
   final bool showInfoDialog;
   final Map<String, ChartTranslations> translations;
   final List<String> timeFormat;
+  final double rightPadding;
 
   //当屏幕滚动到尽头会调用，真为拉到屏幕右侧尽头，假为拉到屏幕左侧尽头
   final Function(bool)? onLoadMore;
@@ -64,6 +65,7 @@ class KChartWidget extends StatefulWidget {
     this.flingTime = 600,
     this.flingRatio = 0.5,
     this.flingCurve = Curves.decelerate,
+    this.rightPadding = 0,
     this.isOnDrag,
   });
 
@@ -109,25 +111,23 @@ class _KChartWidgetState extends State<KChartWidget> with TickerProviderStateMix
       mScrollX = mSelectX = 0.0;
       mScaleX = 1.0;
     }
-    final _painter = ChartPainter(
-      widget.chartStyle,
-      widget.chartColors,
-      datas: widget.datas,
-      scaleX: mScaleX,
-      scrollX: mScrollX,
-      selectX: mSelectX,
-      isLongPass: isLongPress,
-      mainState: widget.mainState,
-      volHidden: widget.volHidden,
-      secondaryState: widget.secondaryState,
-      isLine: widget.isLine,
-      hideGrid: widget.hideGrid,
-      showNowPrice: widget.showNowPrice,
-      sink: mInfoWindowStream?.sink,
-      bgColor: widget.bgColor,
-      fixedLength: widget.fixedLength,
-      maDayList: widget.maDayList,
-    );
+    final _painter = ChartPainter(widget.chartStyle, widget.chartColors,
+        datas: widget.datas,
+        scaleX: mScaleX,
+        scrollX: mScrollX,
+        selectX: mSelectX,
+        isLongPass: isLongPress,
+        mainState: widget.mainState,
+        volHidden: widget.volHidden,
+        secondaryState: widget.secondaryState,
+        isLine: widget.isLine,
+        hideGrid: widget.hideGrid,
+        showNowPrice: widget.showNowPrice,
+        sink: mInfoWindowStream?.sink,
+        bgColor: widget.bgColor,
+        fixedLength: widget.fixedLength,
+        maDayList: widget.maDayList,
+        rightPadding: widget.rightPadding);
 
     return LayoutBuilder(
       builder: (context, constraints) {
