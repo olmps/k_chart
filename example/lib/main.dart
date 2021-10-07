@@ -103,22 +103,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Color(0xff131414),
-      child: KChartWidget(
-        datas,
-        chartStyle,
-        chartColors,
-        isLine: isLine,
-        mainState: MainState.NONE,
-        volHidden: true,
-        secondaryState: SecondaryState.NONE,
-        fixedLength: 2,
-        timeFormat: TimeFormat.YEAR_MONTH_DAY,
-        showNowPrice: true,
-        hideGrid: _hideGrid,
-        maDayList: [1, 100, 1000],
-        rightPadding: 70,
+    return Scaffold(
+      body: Container(
+        height: 300,
+        color: Color(0xff131414),
+        child: KChartWidget(
+          datas,
+          chartStyle,
+          chartColors,
+          isLine: isLine,
+          mainState: MainState.NONE,
+          volHidden: true,
+          secondaryState: SecondaryState.NONE,
+          fixedLength: 2,
+          timeFormat: TimeFormat.YEAR_MONTH_DAY,
+          showNowPrice: true,
+          hideGrid: _hideGrid,
+          maDayList: [1, 100, 1000],
+          rightPadding: 70,
+        ),
       ),
     );
   }

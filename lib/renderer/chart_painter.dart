@@ -307,7 +307,7 @@ class ChartPainter extends BaseChartPainter {
   }
 
   void drawMinMaxToRight(Canvas canvas, double x, double y) {
-    TextSpan span = TextSpan(text: " ──", style: chartStyle.minMaxTextStyle);
+    TextSpan span = TextSpan(text: " ----", style: chartStyle.minMaxTextStyle);
     TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
     tp.layout();
 
@@ -325,7 +325,7 @@ class ChartPainter extends BaseChartPainter {
   }
 
   void drawMinMaxToLeft(Canvas canvas, double x, double y) {
-    TextSpan span = TextSpan(text: "── ", style: chartStyle.minMaxTextStyle);
+    TextSpan span = TextSpan(text: "---- ", style: chartStyle.minMaxTextStyle);
     TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
     tp.layout();
 

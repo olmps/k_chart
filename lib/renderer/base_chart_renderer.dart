@@ -77,14 +77,20 @@ abstract class BaseChartRenderer<T> {
     final left = alignCurrencyText == AlignCurrencyText.end
         ? textStart - currencyImage.width
         : x;
-    final right = alignCurrencyText == AlignCurrencyText.end ? x : x + tp.width;
+    final right = alignCurrencyText == AlignCurrencyText.end
+        ? x
+        : x + tp.width + currencyImage.width;
     double top = y - tp.height / 2;
 
     final rect =
         Rect.fromLTRB(left - 4, top - 2, right + 4, top + tp.height + 2);
+
+    final rRect = RRect.fromRectAndRadius(rect, Radius.circular(4));
+
+    rect.deflate(2);
     if (backgroundColor != null) {
-      canvas.drawRect(
-        rect,
+      canvas.drawRRect(
+        rRect,
         Paint()..color = backgroundColor,
       );
     }
@@ -92,7 +98,7 @@ abstract class BaseChartRenderer<T> {
 
     // Draw asset
     canvas.save();
-    final imageScale = textStyle.fontSize! * 0.8 / currencyImage.height;
+    final imageScale = textStyle.fontSize! * 0.9 / currencyImage.height;
     final paint = Paint()
       ..colorFilter = ColorFilter.mode(textStyle.color!, BlendMode.srcATop);
     canvas.scale(imageScale);
