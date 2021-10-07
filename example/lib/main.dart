@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
@@ -45,8 +46,17 @@ class _MyHomePageState extends State<MyHomePage> {
   List<DepthEntity>? _bids, _asks;
   bool isChangeUI = false;
 
-  ChartStyle chartStyle = ChartStyle();
-  ChartColors chartColors = ChartColors();
+  ChartStyle chartStyle = ChartStyle(
+    yAxisLabelTextStyle: TextStyle(color: Colors.white, fontSize: 10),
+    nowPriceTextStyle: TextStyle(color: Colors.blue, fontSize: 12),
+    minMaxTextStyle: TextStyle(color: Colors.green, fontSize: 12),
+  );
+  ChartColors chartColors = ChartColors(
+    upColor: Color(0xff3E9428),
+    dnColor: Color(0xffB83E3A),
+    minMaxBackgroundColor: Color(0x50424343),
+    nowPriceBackgroundColor: Color(0x203670DF),
+  );
 
   @override
   void initState() {
@@ -104,6 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
       showNowPrice: true,
       hideGrid: _hideGrid,
       maDayList: [1, 100, 1000],
+      rightPadding: 70,
     );
   }
 

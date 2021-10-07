@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:k_chart/chart_translations.dart';
 import 'package:k_chart/extension/map_ext.dart';
 import 'package:k_chart/flutter_k_chart.dart';
+import 'dart:typed_data';
+import 'dart:ui' as UI;
 
 enum MainState { MA, BOLL, NONE }
 enum SecondaryState { MACD, KDJ, RSI, WR, CCI, NONE }
@@ -105,94 +108,115 @@ class _KChartWidgetState extends State<KChartWidget> with TickerProviderStateMix
     super.dispose();
   }
 
+  Future<UI.Image> loadUiImage(String imageAssetPath) async {
+    final ByteData data = await rootBundle.load(imageAssetPath);
+    final Completer<UI.Image> completer = Completer();
+    UI.decodeImageFromList(Uint8List.view(data.buffer), (UI.Image img) {
+      return completer.complete(img);
+    });
+    return completer.future;
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (widget.datas != null && widget.datas!.isEmpty) {
-      mScrollX = mSelectX = 0.0;
-      mScaleX = 1.0;
-    }
-    final _painter = ChartPainter(widget.chartStyle, widget.chartColors,
-        datas: widget.datas,
-        scaleX: mScaleX,
-        scrollX: mScrollX,
-        selectX: mSelectX,
-        isLongPass: isLongPress,
-        mainState: widget.mainState,
-        volHidden: widget.volHidden,
-        secondaryState: widget.secondaryState,
-        isLine: widget.isLine,
-        hideGrid: widget.hideGrid,
-        showNowPrice: widget.showNowPrice,
-        sink: mInfoWindowStream?.sink,
-        bgColor: widget.bgColor,
-        fixedLength: widget.fixedLength,
-        maDayList: widget.maDayList,
-        rightPadding: widget.rightPadding);
+    return FutureBuilder(
+      future: loadUiImage('packages/k_chart/assets/currency_coin.png'),
+      builder: (context, data) {
+        if (!data.hasData) {
+          return CircularProgressIndicator();
+        }
+        if (widget.datas != null && widget.datas!.isEmpty) {
+          mScrollX = mSelectX = 0.0;
+          mScaleX = 1.0;
+        }
+        final _painter = ChartPainter(
+          widget.chartStyle,
+          widget.chartColors,
+          datas: widget.datas,
+          scaleX: mScaleX,
+          scrollX: mScrollX,
+          selectX: mSelectX,
+          isLongPass: isLongPress,
+          mainState: widget.mainState,
+          volHidden: widget.volHidden,
+          secondaryState: widget.secondaryState,
+          isLine: widget.isLine,
+          hideGrid: widget.hideGrid,
+          showNowPrice: widget.showNowPrice,
+          sink: mInfoWindowStream?.sink,
+          bgColor: widget.bgColor,
+          fixedLength: widget.fixedLength,
+          currencyImage: data.data as UI.Image,
+          rightPadding: widget.rightPadding,
+          maDayList: widget.maDayList,
+        );
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        mHeight = constraints.maxHeight;
-        mWidth = constraints.maxWidth;
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            mHeight = constraints.maxHeight;
+            mWidth = constraints.maxWidth;
 
-        return GestureDetector(
-          onTapUp: (details) {
-            if (widget.onSecondaryTap != null && _painter.isInSecondaryRect(details.localPosition)) {
-              widget.onSecondaryTap!();
-            }
-          },
-          onHorizontalDragDown: (details) {
-            _stopAnimation();
-            _onDragChanged(true);
-          },
-          onHorizontalDragUpdate: (details) {
-            if (isScale || isLongPress) return;
-            mScrollX = (details.primaryDelta! / mScaleX + mScrollX).clamp(0.0, ChartPainter.maxScrollX).toDouble();
-            notifyChanged();
-          },
-          onHorizontalDragEnd: (DragEndDetails details) {
-            var velocity = details.velocity.pixelsPerSecond.dx;
-            _onFling(velocity);
-          },
-          onHorizontalDragCancel: () => _onDragChanged(false),
-          onScaleStart: (_) {
-            isScale = true;
-          },
-          onScaleUpdate: (details) {
-            if (isDrag || isLongPress) return;
-            mScaleX = (_lastScale * details.scale).clamp(0.5, 2.2);
-            notifyChanged();
-          },
-          onScaleEnd: (_) {
-            isScale = false;
-            _lastScale = mScaleX;
-          },
-          onLongPressStart: (details) {
-            isLongPress = true;
-            if (mSelectX != details.globalPosition.dx) {
-              mSelectX = details.globalPosition.dx;
-              notifyChanged();
-            }
-          },
-          onLongPressMoveUpdate: (details) {
-            if (mSelectX != details.globalPosition.dx) {
-              mSelectX = details.globalPosition.dx;
-              notifyChanged();
-            }
-          },
-          onLongPressEnd: (details) {
-            isLongPress = false;
-            mInfoWindowStream?.sink.add(null);
-            notifyChanged();
-          },
-          child: Stack(
-            children: <Widget>[
-              CustomPaint(
-                size: Size(double.infinity, double.infinity),
-                painter: _painter,
+            return GestureDetector(
+              onTapUp: (details) {
+                if (widget.onSecondaryTap != null && _painter.isInSecondaryRect(details.localPosition)) {
+                  widget.onSecondaryTap!();
+                }
+              },
+              onHorizontalDragDown: (details) {
+                _stopAnimation();
+                _onDragChanged(true);
+              },
+              onHorizontalDragUpdate: (details) {
+                if (isScale || isLongPress) return;
+                mScrollX = (details.primaryDelta! / mScaleX + mScrollX).clamp(0.0, ChartPainter.maxScrollX).toDouble();
+                notifyChanged();
+              },
+              onHorizontalDragEnd: (DragEndDetails details) {
+                var velocity = details.velocity.pixelsPerSecond.dx;
+                _onFling(velocity);
+              },
+              onHorizontalDragCancel: () => _onDragChanged(false),
+              onScaleStart: (_) {
+                isScale = true;
+              },
+              onScaleUpdate: (details) {
+                if (isDrag || isLongPress) return;
+                mScaleX = (_lastScale * details.scale).clamp(0.5, 2.2);
+                notifyChanged();
+              },
+              onScaleEnd: (_) {
+                isScale = false;
+                _lastScale = mScaleX;
+              },
+              onLongPressStart: (details) {
+                isLongPress = true;
+                if (mSelectX != details.globalPosition.dx) {
+                  mSelectX = details.globalPosition.dx;
+                  notifyChanged();
+                }
+              },
+              onLongPressMoveUpdate: (details) {
+                if (mSelectX != details.globalPosition.dx) {
+                  mSelectX = details.globalPosition.dx;
+                  notifyChanged();
+                }
+              },
+              onLongPressEnd: (details) {
+                isLongPress = false;
+                mInfoWindowStream?.sink.add(null);
+                notifyChanged();
+              },
+              child: Stack(
+                children: <Widget>[
+                  CustomPaint(
+                    size: Size(double.infinity, double.infinity),
+                    painter: _painter,
+                  ),
+                  if (widget.showInfoDialog) _buildInfoDialog()
+                ],
               ),
-              if (widget.showInfoDialog) _buildInfoDialog()
-            ],
-          ),
+            );
+          },
         );
       },
     );

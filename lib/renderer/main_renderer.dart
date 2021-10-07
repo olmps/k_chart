@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../entity/candle_entity.dart';
 import '../k_chart_widget.dart' show MainState;
 import 'base_chart_renderer.dart';
+import 'dart:ui' as UI;
 
 class MainRenderer extends BaseChartRenderer<CandleEntity> {
   late double mCandleWidth;
@@ -19,9 +20,11 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
   final double mLineStrokeWidth = 1.0;
   double scaleX;
   late Paint mLinePaint;
+  final UI.Image currencyImage;
 
   MainRenderer(Rect mainRect, double maxValue, double minValue, double topPadding, this.state, this.isLine,
-      int fixedLength, this.chartStyle, this.chartColors, this.scaleX, [this.maDayList = const [5, 10, 20]])
+      int fixedLength, this.chartStyle, this.chartColors, this.scaleX, this.currencyImage,
+      [this.maDayList = const [5, 10, 20]])
       : super(
             chartRect: mainRect,
             maxValue: maxValue,
@@ -196,17 +199,33 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
   }
 
   @override
-  void drawRightText(canvas, textStyle, int gridRows) {
+  void drawRightText(Canvas canvas, textStyle, int gridRows) {
     double rowSpace = chartRect.height / gridRows;
     for (var i = 0; i <= gridRows; ++i) {
       double value = (gridRows - i) * rowSpace / scaleY + minValue;
-      TextSpan span = TextSpan(text: "${format(value)}", style: textStyle);
+      TextSpan span = TextSpan(text: "${format(value)}", style: chartStyle.yAxisLabelTextStyle);
       TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
       tp.layout();
+
+      final paint = Paint()..colorFilter = ColorFilter.mode(textStyle.color!, BlendMode.srcATop);
+
       if (i == 0) {
-        tp.paint(canvas, Offset(0, topPadding));
+        tp.paint(canvas, Offset(chartRect.width - tp.width, topPadding));
+        final x = chartRect.width - tp.width - this.currencyImage.width - 4;
+        canvas.save();
+        final imageScale = 0.9;
+        canvas.scale(imageScale);
+        canvas.drawImage(this.currencyImage, Offset(x / imageScale, topPadding / imageScale), paint);
+        canvas.restore();
       } else {
-        tp.paint(canvas, Offset(0, rowSpace * i - tp.height + topPadding));
+        tp.paint(canvas, Offset(chartRect.width - tp.width, rowSpace * i - tp.height + topPadding));
+        final x = chartRect.width - tp.width - this.currencyImage.width - 4;
+        final y = rowSpace * i - tp.height + topPadding;
+        canvas.save();
+        final imageScale = 0.9;
+        canvas.scale(imageScale);
+        canvas.drawImage(this.currencyImage, Offset(x / imageScale, y / imageScale), paint);
+        canvas.restore();
       }
     }
   }

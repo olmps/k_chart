@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show Color;
+import 'package:flutter/material.dart';
 
 class ChartColors {
   ChartColors({
@@ -36,6 +36,8 @@ class ChartColors {
     this.crossTextColor = const Color(0xffffffff),
     this.maxColor = const Color(0xffffffff),
     this.minColor = const Color(0xffffffff),
+    this.minMaxBackgroundColor = const Color(0xffffffff),
+    this.nowPriceBackgroundColor = const Color(0xffffffff),
   });
 
   final List<Color> bgColor;
@@ -84,6 +86,9 @@ class ChartColors {
   final Color maxColor;
   final Color minColor;
 
+  final Color minMaxBackgroundColor;
+  final Color nowPriceBackgroundColor;
+
   Color getMAColor(int index) {
     switch (index % 3) {
       case 1:
@@ -111,9 +116,12 @@ class ChartStyle {
     this.nowPriceLineLength = 1,
     this.nowPriceLineSpan = 1,
     this.nowPriceLineWidth = 1,
-    this.gridRows = 4,
-    this.gridColumns = 4,
+    this.gridRows = 3,
+    this.gridColumns = 3,
     this.dateTimeFormat,
+    this.yAxisLabelTextStyle = const TextStyle(fontSize: 10),
+    this.nowPriceTextStyle = const TextStyle(fontSize: 10),
+    this.minMaxTextStyle = const TextStyle(fontSize: 10),
   });
 
   final double topPadding;
@@ -139,4 +147,7 @@ class ChartStyle {
   final int gridColumns;
 
   final List<String>? dateTimeFormat;
+  final TextStyle yAxisLabelTextStyle;
+  final TextStyle nowPriceTextStyle;
+  final TextStyle minMaxTextStyle;
 }
