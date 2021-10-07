@@ -105,7 +105,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        height: 300,
         color: Color(0xff131414),
         child: KChartWidget(
           datas,

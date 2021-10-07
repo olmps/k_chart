@@ -87,6 +87,7 @@ class ChartPainter extends BaseChartPainter {
       mMainMaxValue,
       mMainMinValue,
       mTopPadding,
+      rightPadding,
       mainState,
       isLine,
       fixedLength,

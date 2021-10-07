@@ -21,12 +21,14 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
   double scaleX;
   late Paint mLinePaint;
   final UI.Image currencyImage;
+  final double rightPadding;
 
   MainRenderer(
       Rect mainRect,
       double maxValue,
       double minValue,
       double topPadding,
+      this.rightPadding,
       this.state,
       this.isLine,
       int fixedLength,
@@ -237,15 +239,16 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     for (int i = 0; i <= gridRows; ++i) {
       double value = (gridRows - i) * rowSpace / scaleY + minValue;
 
+      final x = chartRect.width - rightPadding + 4;
       if (i == 0) {
-        final x = chartRect.width;
-        drawCurrencyText(currencyImage, canvas, "${format(value)}", x,
-            topPadding, textStyle);
+        drawCurrencyText(
+            currencyImage, canvas, "${format(value)}", x, topPadding, textStyle,
+            alignCurrencyText: AlignCurrencyText.start);
       } else {
-        final x = chartRect.width;
         final y = rowSpace * i + topPadding;
         drawCurrencyText(
-            currencyImage, canvas, "${format(value)}", x, y, textStyle);
+            currencyImage, canvas, "${format(value)}", x, y, textStyle,
+            alignCurrencyText: AlignCurrencyText.start);
       }
     }
   }
