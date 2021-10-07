@@ -129,19 +129,15 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     ..style = PaintingStyle.fill
     ..isAntiAlias = true;
 
-  //画折线图
-  drawPolyline(double lastPrice, double curPrice, Canvas canvas, double lastX,
-      double curX) {
-//    drawLine(lastPrice + 100, curPrice + 100, canvas, lastX, curX, ChartColors.kLineColor);
+  // Draw a line chart
+  drawPolyline(
+    double lastPrice,
+    double curPrice,
+    Canvas canvas,
+    double lastX,
+    double curX,
+  ) {
     mLinePath ??= Path();
-
-//    if (lastX == curX) {
-//      mLinePath.moveTo(lastX, getY(lastPrice));
-//    } else {
-////      mLinePath.lineTo(curX, getY(curPrice));
-//      mLinePath.cubicTo(
-//          (lastX + curX) / 2, getY(lastPrice), (lastX + curX) / 2, getY(curPrice), curX, getY(curPrice));
-//    }
     if (lastX == curX) lastX = 0; //起点位置填充
     mLinePath!.moveTo(lastX, getY(lastPrice));
     mLinePath!.cubicTo((lastX + curX) / 2, getY(lastPrice), (lastX + curX) / 2,
@@ -156,6 +152,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     ).createShader(Rect.fromLTRB(
         chartRect.left, chartRect.top, chartRect.right, chartRect.bottom));
     mLineFillPaint..shader = mLineFillShader;
+    mLineFillPaint..strokeWidth = 6;
 
     mLineFillPath ??= Path();
 
@@ -168,9 +165,25 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
 
     canvas.drawPath(mLineFillPath!, mLineFillPaint);
     mLineFillPath!.reset();
+    mLinePaint..strokeWidth = (3 / scaleX).clamp(0.3, 3.0);
+    mLinePaint..color = Color(0xffE8F4FF);
+    canvas.drawPath(mLinePath!, mLinePaint);
 
-    canvas.drawPath(mLinePath!,
-        mLinePaint..strokeWidth = (mLineStrokeWidth / scaleX).clamp(0.1, 1.0));
+    final blur1Paint = Paint();
+    blur1Paint..color = Color(0xff3670DF);
+    blur1Paint..maskFilter = MaskFilter.blur(BlurStyle.normal, 10);
+    canvas.drawPath(mLinePath!, blur1Paint);
+
+    final blur2Paint = Paint();
+    blur2Paint..color = Color(0xff4983F2);
+    blur2Paint..maskFilter = MaskFilter.blur(BlurStyle.normal, 3);
+    canvas.drawPath(mLinePath!, blur2Paint);
+
+    final blur3Paint = Paint();
+    blur3Paint..color = Color(0xff4983F2);
+    blur3Paint..maskFilter = MaskFilter.blur(BlurStyle.normal, 1);
+    canvas.drawPath(mLinePath!, blur3Paint);
+
     mLinePath!.reset();
   }
 

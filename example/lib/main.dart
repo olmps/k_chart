@@ -39,12 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   MainState _mainState = MainState.NONE;
   bool _volHidden = false;
   SecondaryState _secondaryState = SecondaryState.MACD;
-  bool isLine = false;
-  bool isChinese = true;
-  bool _hideGrid = false;
-  bool _showNowPrice = true;
   List<DepthEntity>? _bids, _asks;
-  bool isChangeUI = false;
 
   ChartStyle chartStyle = ChartStyle(
     axisLabelTextStyle: TextStyle(color: Color(0xff424343), fontSize: 10),
@@ -112,12 +107,11 @@ class _MyHomePageState extends State<MyHomePage> {
           datas,
           chartStyle,
           chartColors,
-          isLine: false,
+          isLine: true,
           mainState: MainState.NONE,
           volHidden: true,
           secondaryState: SecondaryState.NONE,
           fixedLength: 2,
-          hideGrid: _hideGrid,
           maDayList: [1, 100, 1000],
           rightPadding: 80,
         ),

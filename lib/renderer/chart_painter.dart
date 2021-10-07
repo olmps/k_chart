@@ -314,7 +314,7 @@ class ChartPainter extends BaseChartPainter {
     mMainRenderer.drawCurrencyText(
       currencyImage,
       canvas,
-      mMainLowMinValue.toStringAsFixed(fixedLength),
+      mMainHighMaxValue.toStringAsFixed(fixedLength),
       x - tp.width,
       y,
       chartStyle.minMaxTextStyle,
