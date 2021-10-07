@@ -47,14 +47,14 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isChangeUI = false;
 
   ChartStyle chartStyle = ChartStyle(
-    yAxisLabelTextStyle: TextStyle(color: Colors.white, fontSize: 10),
+    yAxisLabelTextStyle: TextStyle(color: Color(0xff424343), fontSize: 10),
     nowPriceTextStyle: TextStyle(color: Colors.blue, fontSize: 12),
-    minMaxTextStyle: TextStyle(color: Colors.green, fontSize: 12),
+    minMaxTextStyle: TextStyle(color: Colors.white, fontSize: 12),
   );
   ChartColors chartColors = ChartColors(
     upColor: Color(0xff3E9428),
     dnColor: Color(0xffB83E3A),
-    minMaxBackgroundColor: Color(0x50424343),
+    minMaxBackgroundColor: Color(0xff42434350),
     nowPriceBackgroundColor: Color(0x203670DF),
   );
 
@@ -66,10 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
       final parseJson = json.decode(result);
       final tick = parseJson['tick'] as Map<String, dynamic>;
       final List<DepthEntity> bids = (tick['bids'] as List<dynamic>)
-          .map<DepthEntity>((item) => DepthEntity(item[0] as double, item[1] as double))
+          .map<DepthEntity>(
+              (item) => DepthEntity(item[0] as double, item[1] as double))
           .toList();
       final List<DepthEntity> asks = (tick['asks'] as List<dynamic>)
-          .map<DepthEntity>((item) => DepthEntity(item[0] as double, item[1] as double))
+          .map<DepthEntity>(
+              (item) => DepthEntity(item[0] as double, item[1] as double))
           .toList();
       initDepth(bids, asks);
     });
@@ -101,20 +103,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return KChartWidget(
-      datas,
-      chartStyle,
-      chartColors,
-      isLine: isLine,
-      mainState: MainState.NONE,
-      volHidden: true,
-      secondaryState: SecondaryState.NONE,
-      fixedLength: 2,
-      timeFormat: TimeFormat.YEAR_MONTH_DAY,
-      showNowPrice: true,
-      hideGrid: _hideGrid,
-      maDayList: [1, 100, 1000],
-      rightPadding: 70,
+    return Container(
+      color: Color(0xff131414),
+      child: KChartWidget(
+        datas,
+        chartStyle,
+        chartColors,
+        isLine: isLine,
+        mainState: MainState.NONE,
+        volHidden: true,
+        secondaryState: SecondaryState.NONE,
+        fixedLength: 2,
+        timeFormat: TimeFormat.YEAR_MONTH_DAY,
+        showNowPrice: true,
+        hideGrid: _hideGrid,
+        maDayList: [1, 100, 1000],
+        rightPadding: 70,
+      ),
     );
   }
 
@@ -162,7 +167,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //获取火币数据，需要翻墙
   Future<String> getIPAddress(String? period) async {
-    var url = 'https://api.huobi.br.com/market/history/kline?period=${period ?? '1day'}&size=300&symbol=btcusdt';
+    var url =
+        'https://api.huobi.br.com/market/history/kline?period=${period ?? '1day'}&size=300&symbol=btcusdt';
     late String result;
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {

@@ -13,7 +13,17 @@ enum SecondaryState { MACD, KDJ, RSI, WR, CCI, NONE }
 
 class TimeFormat {
   static const List<String> YEAR_MONTH_DAY = [yyyy, '-', mm, '-', dd];
-  static const List<String> YEAR_MONTH_DAY_WITH_HOUR = [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn];
+  static const List<String> YEAR_MONTH_DAY_WITH_HOUR = [
+    yyyy,
+    '-',
+    mm,
+    '-',
+    dd,
+    ' ',
+    HH,
+    ':',
+    nn
+  ];
 }
 
 class KChartWidget extends StatefulWidget {
@@ -35,8 +45,6 @@ class KChartWidget extends StatefulWidget {
   //当屏幕滚动到尽头会调用，真为拉到屏幕右侧尽头，假为拉到屏幕左侧尽头
   final Function(bool)? onLoadMore;
 
-  @Deprecated('Use `chartColors` instead.')
-  final List<Color>? bgColor;
   final int fixedLength;
   final List<int> maDayList;
   final int flingTime;
@@ -62,7 +70,6 @@ class KChartWidget extends StatefulWidget {
     this.translations = kChartTranslations,
     this.timeFormat = TimeFormat.YEAR_MONTH_DAY,
     this.onLoadMore,
-    @Deprecated('Use `chartColors` instead.') this.bgColor,
     this.fixedLength = 2,
     this.maDayList = const [5, 10, 20],
     this.flingTime = 600,
@@ -76,7 +83,8 @@ class KChartWidget extends StatefulWidget {
   _KChartWidgetState createState() => _KChartWidgetState();
 }
 
-class _KChartWidgetState extends State<KChartWidget> with TickerProviderStateMixin {
+class _KChartWidgetState extends State<KChartWidget>
+    with TickerProviderStateMixin {
   double mScaleX = 1.0, mScrollX = 0.0, mSelectX = 0.0;
   StreamController<InfoWindowEntity?>? mInfoWindowStream;
   double mHeight = 0, mWidth = 0;
@@ -144,7 +152,6 @@ class _KChartWidgetState extends State<KChartWidget> with TickerProviderStateMix
           hideGrid: widget.hideGrid,
           showNowPrice: widget.showNowPrice,
           sink: mInfoWindowStream?.sink,
-          bgColor: widget.bgColor,
           fixedLength: widget.fixedLength,
           currencyImage: data.data as UI.Image,
           rightPadding: widget.rightPadding,
@@ -158,7 +165,8 @@ class _KChartWidgetState extends State<KChartWidget> with TickerProviderStateMix
 
             return GestureDetector(
               onTapUp: (details) {
-                if (widget.onSecondaryTap != null && _painter.isInSecondaryRect(details.localPosition)) {
+                if (widget.onSecondaryTap != null &&
+                    _painter.isInSecondaryRect(details.localPosition)) {
                   widget.onSecondaryTap!();
                 }
               },
@@ -168,7 +176,9 @@ class _KChartWidgetState extends State<KChartWidget> with TickerProviderStateMix
               },
               onHorizontalDragUpdate: (details) {
                 if (isScale || isLongPress) return;
-                mScrollX = (details.primaryDelta! / mScaleX + mScrollX).clamp(0.0, ChartPainter.maxScrollX).toDouble();
+                mScrollX = (details.primaryDelta! / mScaleX + mScrollX)
+                    .clamp(0.0, ChartPainter.maxScrollX)
+                    .toDouble();
                 notifyChanged();
               },
               onHorizontalDragEnd: (DragEndDetails details) {
@@ -240,10 +250,12 @@ class _KChartWidgetState extends State<KChartWidget> with TickerProviderStateMix
   }
 
   void _onFling(double x) {
-    _controller = AnimationController(duration: Duration(milliseconds: widget.flingTime), vsync: this);
+    _controller = AnimationController(
+        duration: Duration(milliseconds: widget.flingTime), vsync: this);
     aniX = null;
     aniX = Tween<double>(begin: mScrollX, end: x * widget.flingRatio + mScrollX)
-        .animate(CurvedAnimation(parent: _controller!.view, curve: widget.flingCurve));
+        .animate(CurvedAnimation(
+            parent: _controller!.view, curve: widget.flingCurve));
     aniX!.addListener(() {
       mScrollX = aniX!.value;
       if (mScrollX <= 0) {
@@ -262,7 +274,8 @@ class _KChartWidgetState extends State<KChartWidget> with TickerProviderStateMix
       notifyChanged();
     });
     aniX!.addStatusListener((status) {
-      if (status == AnimationStatus.completed || status == AnimationStatus.dismissed) {
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
         _onDragChanged(false);
         notifyChanged();
       }
@@ -278,8 +291,10 @@ class _KChartWidgetState extends State<KChartWidget> with TickerProviderStateMix
     return StreamBuilder<InfoWindowEntity?>(
         stream: mInfoWindowStream?.stream,
         builder: (context, snapshot) {
-          if (!isLongPress || widget.isLine == true || !snapshot.hasData || snapshot.data?.kLineEntity == null)
-            return Container();
+          if (!isLongPress ||
+              widget.isLine == true ||
+              !snapshot.hasData ||
+              snapshot.data?.kLineEntity == null) return Container();
           KLineEntity entity = snapshot.data!.kLineEntity;
           double upDown = entity.change ?? entity.close - entity.open;
           double upDownPercent = entity.ratio ?? (upDown / entity.open) * 100;
@@ -294,18 +309,23 @@ class _KChartWidgetState extends State<KChartWidget> with TickerProviderStateMix
             entity.amount.toInt().toString()
           ];
           return Container(
-            margin: EdgeInsets.only(left: snapshot.data!.isLeft ? 4 : mWidth - mWidth / 3 - 4, top: 25),
+            margin: EdgeInsets.only(
+                left: snapshot.data!.isLeft ? 4 : mWidth - mWidth / 3 - 4,
+                top: 25),
             width: mWidth / 3,
             decoration: BoxDecoration(
                 color: widget.chartColors.selectFillColor,
-                border: Border.all(color: widget.chartColors.selectBorderColor, width: 0.5)),
+                border: Border.all(
+                    color: widget.chartColors.selectBorderColor, width: 0.5)),
             child: ListView.builder(
               padding: EdgeInsets.all(4),
               itemCount: infos.length,
               itemExtent: 14.0,
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                final translations = widget.isChinese ? kChartTranslations['zh_CN']! : widget.translations.of(context);
+                final translations = widget.isChinese
+                    ? kChartTranslations['zh_CN']!
+                    : widget.translations.of(context);
 
                 return _buildItem(
                   infos[index],
@@ -328,12 +348,17 @@ class _KChartWidgetState extends State<KChartWidget> with TickerProviderStateMix
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Expanded(
-            child: Text("$infoName", style: TextStyle(color: widget.chartColors.infoWindowTitleColor, fontSize: 10.0))),
+            child: Text("$infoName",
+                style: TextStyle(
+                    color: widget.chartColors.infoWindowTitleColor,
+                    fontSize: 10.0))),
         Text(info, style: TextStyle(color: color, fontSize: 10.0)),
       ],
     );
   }
 
-  String getDate(int? date) =>
-      dateFormat(DateTime.fromMillisecondsSinceEpoch(date ?? DateTime.now().millisecondsSinceEpoch), widget.timeFormat);
+  String getDate(int? date) => dateFormat(
+      DateTime.fromMillisecondsSinceEpoch(
+          date ?? DateTime.now().millisecondsSinceEpoch),
+      widget.timeFormat);
 }
