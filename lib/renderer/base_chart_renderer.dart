@@ -71,8 +71,9 @@ abstract class BaseChartRenderer<T> {
     TextSpan span = TextSpan(text: text, style: textStyle);
     TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
     tp.layout();
-    final textStart =
-        alignCurrencyText == AlignCurrencyText.end ? x - tp.width : x + currencyImage.width;
+    final textStart = alignCurrencyText == AlignCurrencyText.end
+        ? x - tp.width
+        : x + currencyImage.width;
     final left = alignCurrencyText == AlignCurrencyText.end
         ? textStart - currencyImage.width
         : x;
