@@ -178,7 +178,7 @@ class SecondaryRenderer extends BaseChartRenderer<MACDEntity> {
   }
 
   @override
-  void drawGrid(Canvas canvas, int gridRows, int gridColumns) {
+  void drawGrid(Canvas canvas, int gridRows, int gridColumns, [Color? color]) {
     canvas.drawLine(Offset(0, chartRect.top),
         Offset(chartRect.width, chartRect.top), gridPaint);
     canvas.drawLine(Offset(0, chartRect.bottom),

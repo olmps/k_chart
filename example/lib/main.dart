@@ -47,15 +47,17 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isChangeUI = false;
 
   ChartStyle chartStyle = ChartStyle(
-    yAxisLabelTextStyle: TextStyle(color: Color(0xff424343), fontSize: 10),
+    axisLabelTextStyle: TextStyle(color: Color(0xff424343), fontSize: 10),
     nowPriceTextStyle: TextStyle(color: Colors.blue, fontSize: 12),
     minMaxTextStyle: TextStyle(color: Colors.white, fontSize: 12),
+    dateTimeFormat: TimeFormat.DAY_MONTH_YEAR,
   );
   ChartColors chartColors = ChartColors(
     upColor: Color(0xff3E9428),
     dnColor: Color(0xffB83E3A),
     minMaxBackgroundColor: Color(0xff42434350),
     nowPriceBackgroundColor: Color(0x203670DF),
+    gridColor: Color(0xff2F3131),
   );
 
   @override
@@ -110,16 +112,14 @@ class _MyHomePageState extends State<MyHomePage> {
           datas,
           chartStyle,
           chartColors,
-          isLine: isLine,
+          isLine: false,
           mainState: MainState.NONE,
           volHidden: true,
           secondaryState: SecondaryState.NONE,
           fixedLength: 2,
-          timeFormat: TimeFormat.YEAR_MONTH_DAY,
-          showNowPrice: true,
           hideGrid: _hideGrid,
           maDayList: [1, 100, 1000],
-          rightPadding: 70,
+          rightPadding: 80,
         ),
       ),
     );

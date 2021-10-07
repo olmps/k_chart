@@ -21,14 +21,14 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
   double scaleX;
   late Paint mLinePaint;
   final UI.Image currencyImage;
-  final double rightPadding;
+  final double gridPadding;
 
   MainRenderer(
       Rect mainRect,
       double maxValue,
       double minValue,
       double topPadding,
-      this.rightPadding,
+      this.gridPadding,
       this.state,
       this.isLine,
       int fixedLength,
@@ -216,8 +216,11 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
         open = close + mCandleLineWidth;
       }
       chartPaint.color = this.chartColors.upColor;
-      canvas.drawRect(
-          Rect.fromLTRB(curX - r, close, curX + r, open), chartPaint);
+      final candle = Rect.fromLTRB(curX - r, close, curX + r, open);
+      canvas.drawRRect(
+          UI.RRect.fromRectAndRadius(candle, Radius.elliptical(1, 3)),
+          chartPaint);
+
       canvas.drawRect(
           Rect.fromLTRB(curX - lineR, high, curX + lineR, low), chartPaint);
     } else if (close > open) {
@@ -226,8 +229,10 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
         open = close - mCandleLineWidth;
       }
       chartPaint.color = this.chartColors.dnColor;
-      canvas.drawRect(
-          Rect.fromLTRB(curX - r, open, curX + r, close), chartPaint);
+      final candle = Rect.fromLTRB(curX - r, open, curX + r, close);
+      canvas.drawRRect(
+          UI.RRect.fromRectAndRadius(candle, Radius.elliptical(1, 3)),
+          chartPaint);
       canvas.drawRect(
           Rect.fromLTRB(curX - lineR, high, curX + lineR, low), chartPaint);
     }
@@ -239,7 +244,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     for (int i = 0; i <= gridRows; ++i) {
       double value = (gridRows - i) * rowSpace / scaleY + minValue;
 
-      final x = chartRect.width - rightPadding + 4;
+      final x = chartRect.width - gridPadding + 4;
       if (i == 0) {
         drawCurrencyText(
             currencyImage, canvas, "${format(value)}", x, topPadding, textStyle,
@@ -254,8 +259,8 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
   }
 
   @override
-  void drawGrid(Canvas canvas, int gridRows, int gridColumns) {
-//    final int gridRows = 4, gridColumns = 4;
+  void drawGrid(Canvas canvas, int gridRows, int gridColumns, [Color? color]) {
+    if (color != null) gridPaint..color = color;
     double rowSpace = chartRect.height / gridRows;
     for (int i = 0; i <= gridRows; i++) {
       canvas.drawLine(Offset(0, rowSpace * i + topPadding),
@@ -263,7 +268,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     }
     double columnSpace = chartRect.width / gridColumns;
     for (int i = 0; i <= columnSpace; i++) {
-      canvas.drawLine(Offset(columnSpace * i, topPadding / 3),
+      canvas.drawLine(Offset(columnSpace * i, topPadding),
           Offset(columnSpace * i, chartRect.bottom), gridPaint);
     }
   }

@@ -17,7 +17,7 @@ abstract class BaseChartRenderer<T> {
   Paint gridPaint = Paint()
     ..isAntiAlias = true
     ..filterQuality = FilterQuality.high
-    ..strokeWidth = 0.5
+    ..strokeWidth = 1
     ..color = Color(0xff4c5c74);
 
   BaseChartRenderer({
@@ -47,7 +47,7 @@ abstract class BaseChartRenderer<T> {
     }
   }
 
-  void drawGrid(Canvas canvas, int gridRows, int gridColumns);
+  void drawGrid(Canvas canvas, int gridRows, int gridColumns, [Color? color]);
 
   void drawText(Canvas canvas, T data, double x);
 

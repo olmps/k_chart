@@ -31,6 +31,7 @@ class ChartPainter extends BaseChartPainter {
   final bool showNowPrice;
   final UI.Image currencyImage;
   final double rightPadding;
+  final double gridPadding;
 
   ChartPainter(
     this.chartStyle,
@@ -42,6 +43,7 @@ class ChartPainter extends BaseChartPainter {
     required selectX,
     required this.currencyImage,
     required this.rightPadding,
+    required this.gridPadding,
     mainState,
     volHidden,
     secondaryState,
@@ -87,7 +89,7 @@ class ChartPainter extends BaseChartPainter {
       mMainMaxValue,
       mMainMinValue,
       mTopPadding,
-      rightPadding,
+      gridPadding,
       mainState,
       isLine,
       fixedLength,
@@ -118,10 +120,14 @@ class ChartPainter extends BaseChartPainter {
   void drawGrid(Canvas canvas, Size size) {
     if (!hideGrid) {
       canvas.save();
-      canvas.clipRect(Rect.fromLTRB(0, 0, size.width - 70, size.height));
-      mMainRenderer.drawGrid(canvas, mGridRows, mGridColumns);
-      mVolRenderer?.drawGrid(canvas, mGridRows, mGridColumns);
-      mSecondaryRenderer?.drawGrid(canvas, mGridRows, mGridColumns);
+      canvas
+          .clipRect(Rect.fromLTRB(0, 0, size.width - gridPadding, size.height));
+      mMainRenderer.drawGrid(
+          canvas, mGridRows, mGridColumns, chartColors.gridColor);
+      mVolRenderer?.drawGrid(
+          canvas, mGridRows, mGridColumns, chartColors.gridColor);
+      mSecondaryRenderer?.drawGrid(
+          canvas, mGridRows, mGridColumns, chartColors.gridColor);
       canvas.restore();
     }
   }
@@ -151,7 +157,7 @@ class ChartPainter extends BaseChartPainter {
 
   @override
   void drawRightText(Canvas canvas) {
-    final textStyle = this.chartStyle.yAxisLabelTextStyle;
+    final textStyle = this.chartStyle.axisLabelTextStyle;
     if (!hideGrid) {
       mMainRenderer.drawRightText(canvas, textStyle, mGridRows);
     }
@@ -175,7 +181,8 @@ class ChartPainter extends BaseChartPainter {
         int index = indexOfTranslateX(translateX);
 
         if (datas?[index] == null) continue;
-        TextPainter tp = getTextPainter(getDate(datas![index].time), null);
+        TextPainter tp = getTextPainter(
+            getDate(datas![index].time), chartStyle.axisLabelTextStyle);
         y = size.height - (mBottomPadding - tp.height) / 2 - tp.height;
         x = columnSpace * i - tp.width / 2;
         // Prevent date text out of canvas
@@ -184,17 +191,6 @@ class ChartPainter extends BaseChartPainter {
         tp.paint(canvas, Offset(x, y));
       }
     }
-
-//    double translateX = xToTranslateX(0);
-//    if (translateX >= startX && translateX <= stopX) {
-//      TextPainter tp = getTextPainter(getDate(datas[mStartIndex].id));
-//      tp.paint(canvas, Offset(0, y));
-//    }
-//    translateX = xToTranslateX(size.width);
-//    if (translateX >= startX && translateX <= stopX) {
-//      TextPainter tp = getTextPainter(getDate(datas[mStopIndex].id));
-//      tp.paint(canvas, Offset(size.width - tp.width, y));
-//    }
   }
 
   @override
@@ -202,8 +198,8 @@ class ChartPainter extends BaseChartPainter {
     var index = calculateSelectedX(selectX);
     KLineEntity point = getItem(index);
 
-    TextPainter tp = getTextPainter(
-        point.close, TextStyle(color: chartColors.crossTextColor));
+    TextPainter tp = getTextPainter(point.close.toStringAsFixed(fixedLength),
+        TextStyle(color: chartColors.crossTextColor));
     double textHeight = tp.height;
     double textWidth = tp.width;
 
@@ -241,8 +237,8 @@ class ChartPainter extends BaseChartPainter {
       tp.paint(canvas, Offset(x + w1 + w2, y - textHeight / 2));
     }
 
-    TextPainter dateTp = getTextPainter(
-        getDate(point.time), TextStyle(color: chartColors.crossTextColor));
+    TextPainter dateTp =
+        getTextPainter(getDate(point.time), chartStyle.axisLabelTextStyle);
     textWidth = dateTp.width;
     r = textHeight / 2;
     x = translateXtoX(getX(index));
@@ -283,6 +279,9 @@ class ChartPainter extends BaseChartPainter {
 
   @override
   void drawMaxAndMin(Canvas canvas, Size size) {
+    if (isLine) {
+      return;
+    }
     canvas.save();
     canvas.clipRect(
       Rect.fromLTRB(0, 0, size.width - rightPadding, size.height),
@@ -374,7 +373,7 @@ class ChartPainter extends BaseChartPainter {
     // Draw line
     double startX = 0;
     final space = 8;
-    while (startX < currencyRect.left) {
+    while (startX < currencyRect.left - space / 2) {
       canvas.drawLine(
         Offset(startX, y),
         Offset(startX + 4, y),
@@ -420,7 +419,7 @@ class ChartPainter extends BaseChartPainter {
     }
   }
 
-  TextPainter getTextPainter(text, style) {
+  TextPainter getTextPainter(String text, TextStyle? style) {
     TextSpan span = TextSpan(text: "$text", style: style);
     TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
     tp.layout();

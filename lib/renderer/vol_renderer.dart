@@ -83,7 +83,7 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
   }
 
   @override
-  void drawGrid(Canvas canvas, int gridRows, int gridColumns) {
+  void drawGrid(Canvas canvas, int gridRows, int gridColumns, [Color? color]) {
     canvas.drawLine(Offset(0, chartRect.bottom),
         Offset(chartRect.width, chartRect.bottom), gridPaint);
     double columnSpace = chartRect.width / gridColumns;

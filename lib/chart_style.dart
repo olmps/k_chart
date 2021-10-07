@@ -122,7 +122,7 @@ class ChartStyle {
     this.gridRows = 3,
     this.gridColumns = 3,
     this.dateTimeFormat,
-    this.yAxisLabelTextStyle = const TextStyle(fontSize: 10),
+    this.axisLabelTextStyle = const TextStyle(fontSize: 10),
     this.nowPriceTextStyle = const TextStyle(fontSize: 10),
     this.minMaxTextStyle = const TextStyle(fontSize: 10),
   });
@@ -150,7 +150,7 @@ class ChartStyle {
   final int gridColumns;
 
   final List<String>? dateTimeFormat;
-  final TextStyle yAxisLabelTextStyle;
+  final TextStyle axisLabelTextStyle;
   final TextStyle nowPriceTextStyle;
   final TextStyle minMaxTextStyle;
 }
