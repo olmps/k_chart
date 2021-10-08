@@ -103,15 +103,6 @@ abstract class BaseChartRenderer<T> {
               (tp.height - textStyle.fontSize!) / 4,
         ));
 
-    print('!!!!');
-    print('LUCASBIANCOGS: TP>HEIGHT: ${tp.height}');
-    print('LUCASBIANCOGS: RECT>HEIGHT: ${rect.height}');
-    print('LUCASBIANCOGS: RECT>CENTER>DY: ${rect.center.dy}');
-    print('LUCASBIANCOGS: FONT>SIZE: ${textStyle.height}');
-    print('LUCASBIANCOGS: FONT>HEIGHT: ${textStyle.fontSize}');
-    print('LUCASBIANCOGS: OFFSET: ${rect.center.dy - (tp.height) / 2}');
-    print('!!!!');
-
     // Draw asset
     canvas.save();
     final imageScale =
