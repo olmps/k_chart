@@ -49,12 +49,10 @@ class _MyHomePageState extends State<MyHomePage> {
       final parseJson = json.decode(result);
       final tick = parseJson['tick'] as Map<String, dynamic>;
       final List<DepthEntity> bids = (tick['bids'] as List<dynamic>)
-          .map<DepthEntity>(
-              (item) => DepthEntity(item[0] as double, item[1] as double))
+          .map<DepthEntity>((item) => DepthEntity(item[0] as double, item[1] as double))
           .toList();
       final List<DepthEntity> asks = (tick['asks'] as List<dynamic>)
-          .map<DepthEntity>(
-              (item) => DepthEntity(item[0] as double, item[1] as double))
+          .map<DepthEntity>((item) => DepthEntity(item[0] as double, item[1] as double))
           .toList();
       initDepth(bids, asks);
     });
@@ -85,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<ByteData> getByteData() async {
-    return rootBundle.load('packages/k_chart/assets/currency_coin.png');
+    return rootBundle.load('assets/currency_coin.png');
   }
 
   @override
@@ -104,8 +102,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
               ChartStyle chartStyle = ChartStyle(
                 byteData,
-                axisLabelTextStyle:
-                    TextStyle(color: Color(0xff424343), fontSize: 10),
+                axisLabelTextStyle: TextStyle(
+                  fontFamily: 'Rubik',
+                  fontSize: 10,
+                  height: 1,
+                  letterSpacing: 0,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xff424343),
+                ),
                 nowPriceTextStyle: TextStyle(color: Colors.blue, fontSize: 12),
                 minMaxTextStyle: TextStyle(color: Colors.white, fontSize: 12),
                 dateTimeFormat: TimeFormat.DAY_MONTH_YEAR,
@@ -180,8 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //获取火币数据，需要翻墙
   Future<String> getIPAddress(String? period) async {
-    var url =
-        'https://api.huobi.br.com/market/history/kline?period=${period ?? '1day'}&size=300&symbol=btcusdt';
+    var url = 'https://api.huobi.br.com/market/history/kline?period=${period ?? '1day'}&size=300&symbol=btcusdt';
     late String result;
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
