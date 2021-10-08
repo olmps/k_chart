@@ -41,20 +41,6 @@ class _MyHomePageState extends State<MyHomePage> {
   SecondaryState _secondaryState = SecondaryState.MACD;
   List<DepthEntity>? _bids, _asks;
 
-  ChartStyle chartStyle = ChartStyle(
-    axisLabelTextStyle: TextStyle(color: Color(0xff424343), fontSize: 10),
-    nowPriceTextStyle: TextStyle(color: Colors.blue, fontSize: 12),
-    minMaxTextStyle: TextStyle(color: Colors.white, fontSize: 12),
-    dateTimeFormat: TimeFormat.DAY_MONTH_YEAR,
-  );
-  ChartColors chartColors = ChartColors(
-    upColor: Color(0xff3E9428),
-    dnColor: Color(0xffB83E3A),
-    minMaxBackgroundColor: Color(0xff42434350),
-    nowPriceBackgroundColor: Color(0x203670DF),
-    gridColor: Color(0xff2F3131),
-  );
-
   @override
   void initState() {
     super.initState();
@@ -98,23 +84,54 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
+  Future<ByteData> getByteData() async {
+    return rootBundle.load('packages/k_chart/assets/currency_coin.png');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         color: Color(0xff131414),
-        child: KChartWidget(
-          datas,
-          chartStyle,
-          chartColors,
-          isLine: true,
-          mainState: MainState.NONE,
-          volHidden: true,
-          secondaryState: SecondaryState.NONE,
-          fixedLength: 2,
-          maDayList: [1, 100, 1000],
-          rightPadding: 80,
-        ),
+        child: FutureBuilder<Object>(
+            future: getByteData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container();
+              }
+
+              final byteData = snapshot.data as ByteData;
+
+              ChartStyle chartStyle = ChartStyle(
+                byteData,
+                axisLabelTextStyle:
+                    TextStyle(color: Color(0xff424343), fontSize: 10),
+                nowPriceTextStyle: TextStyle(color: Colors.blue, fontSize: 12),
+                minMaxTextStyle: TextStyle(color: Colors.white, fontSize: 12),
+                dateTimeFormat: TimeFormat.DAY_MONTH_YEAR,
+              );
+
+              ChartColors chartColors = ChartColors(
+                upColor: Color(0xff3E9428),
+                dnColor: Color(0xffB83E3A),
+                minMaxBackgroundColor: Color(0xff42434350),
+                nowPriceBackgroundColor: Color(0x203670DF),
+                gridColor: Color(0xff2F3131),
+              );
+
+              return KChartWidget(
+                datas,
+                chartStyle,
+                chartColors,
+                isLine: true,
+                mainState: MainState.NONE,
+                volHidden: true,
+                secondaryState: SecondaryState.NONE,
+                fixedLength: 2,
+                maDayList: [1, 100, 1000],
+                rightPadding: 80,
+              );
+            }),
       ),
     );
   }

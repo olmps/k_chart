@@ -290,23 +290,23 @@ class ChartPainter extends BaseChartPainter {
     final minX = translateXtoX(getX(mMainMinIndex));
     final minY = getMainY(mMainLowMinValue);
     if (minX > size.width / 2) {
-      drawMinMaxToRight(canvas, minX, minY);
+      drawMinMaxToRight(canvas, minX, minY, mMainLowMinValue);
     } else {
-      drawMinMaxToLeft(canvas, minX, minY);
+      drawMinMaxToLeft(canvas, minX, minY, mMainLowMinValue);
     }
 
     final maxX = translateXtoX(getX(mMainMaxIndex));
     final maxY = getMainY(mMainHighMaxValue);
 
     if (maxX > size.width / 2) {
-      drawMinMaxToRight(canvas, maxX, maxY);
+      drawMinMaxToRight(canvas, maxX, maxY, mMainHighMaxValue);
     } else {
-      drawMinMaxToLeft(canvas, maxX, maxY);
+      drawMinMaxToLeft(canvas, maxX, maxY, mMainHighMaxValue);
     }
     canvas.restore();
   }
 
-  void drawMinMaxToRight(Canvas canvas, double x, double y) {
+  void drawMinMaxToRight(Canvas canvas, double x, double y, double value) {
     TextSpan span = TextSpan(text: " ----", style: chartStyle.minMaxTextStyle);
     TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
     tp.layout();
@@ -314,7 +314,7 @@ class ChartPainter extends BaseChartPainter {
     mMainRenderer.drawCurrencyText(
       currencyImage,
       canvas,
-      mMainHighMaxValue.toStringAsFixed(fixedLength),
+      value.toStringAsFixed(fixedLength),
       x - tp.width,
       y,
       chartStyle.minMaxTextStyle,
@@ -324,7 +324,7 @@ class ChartPainter extends BaseChartPainter {
     tp.paint(canvas, Offset(x - tp.width, y - tp.height / 2));
   }
 
-  void drawMinMaxToLeft(Canvas canvas, double x, double y) {
+  void drawMinMaxToLeft(Canvas canvas, double x, double y, double value) {
     TextSpan span = TextSpan(text: "---- ", style: chartStyle.minMaxTextStyle);
     TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
     tp.layout();
@@ -334,7 +334,7 @@ class ChartPainter extends BaseChartPainter {
     mMainRenderer.drawCurrencyText(
       currencyImage,
       canvas,
-      mMainLowMinValue.toStringAsFixed(fixedLength),
+      value.toStringAsFixed(fixedLength),
       x + tp.width,
       y,
       chartStyle.minMaxTextStyle,
@@ -364,7 +364,7 @@ class ChartPainter extends BaseChartPainter {
       currencyImage,
       canvas,
       value.toStringAsFixed(fixedLength),
-      size.width,
+      size.width - 4,
       y,
       this.chartStyle.nowPriceTextStyle,
       backgroundColor: this.chartColors.nowPriceBackgroundColor,

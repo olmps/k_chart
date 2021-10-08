@@ -137,54 +137,64 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     double lastX,
     double curX,
   ) {
-    mLinePath ??= Path();
+    final polylinePath = Path();
     if (lastX == curX) lastX = 0; //起点位置填充
-    mLinePath!.moveTo(lastX, getY(lastPrice));
-    mLinePath!.cubicTo((lastX + curX) / 2, getY(lastPrice), (lastX + curX) / 2,
-        getY(curPrice), curX, getY(curPrice));
+    polylinePath.moveTo(lastX, getY(lastPrice));
+    final polygon = [
+      Offset(lastX, getY(lastX)),
+      Offset((lastX + curX) / 2, getY((lastX + curX) / 2)),
+      Offset(curX, getY(curX)),
+    ];
+    polylinePath.addPolygon(polygon, false);
+    //polylinePath.cubicTo((lastX + curX) / 2, getY(lastPrice),
+    //    (lastX + curX) / 2, getY(curPrice), curX, getY(curPrice));
 
-    //画阴影
-    mLineFillShader ??= LinearGradient(
+    final polylinePaint = Paint();
+
+    polylinePaint.strokeWidth = (3 / scaleX).clamp(0.3, 3.0);
+    polylinePaint.color = Colors.red;
+
+    canvas.drawPath(polylinePath, polylinePaint);
+
+    // Draw shadows
+    final shadowPath = Path();
+    shadowPath.moveTo(lastX, chartRect.height + chartRect.top);
+    shadowPath.lineTo(lastX, getY(lastPrice));
+    shadowPath.cubicTo((lastX + curX) / 2, getY(lastPrice), (lastX + curX) / 2,
+        getY(curPrice), curX, getY(curPrice));
+    shadowPath.lineTo(curX, chartRect.height + chartRect.top);
+    shadowPath.close();
+
+    final shadowPaint = Paint();
+    final shadowShader = LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       tileMode: TileMode.clamp,
       colors: [this.chartColors.lineFillColor, Colors.transparent],
     ).createShader(Rect.fromLTRB(
         chartRect.left, chartRect.top, chartRect.right, chartRect.bottom));
-    mLineFillPaint..shader = mLineFillShader;
-    mLineFillPaint..strokeWidth = 6;
+    shadowPaint..shader = shadowShader;
 
-    mLineFillPath ??= Path();
-
-    mLineFillPath!.moveTo(lastX, chartRect.height + chartRect.top);
-    mLineFillPath!.lineTo(lastX, getY(lastPrice));
-    mLineFillPath!.cubicTo((lastX + curX) / 2, getY(lastPrice),
-        (lastX + curX) / 2, getY(curPrice), curX, getY(curPrice));
-    mLineFillPath!.lineTo(curX, chartRect.height + chartRect.top);
-    mLineFillPath!.close();
-
-    canvas.drawPath(mLineFillPath!, mLineFillPaint);
-    mLineFillPath!.reset();
-    mLinePaint..strokeWidth = (3 / scaleX).clamp(0.3, 3.0);
-    mLinePaint..color = Color(0xffE8F4FF);
-    canvas.drawPath(mLinePath!, mLinePaint);
-
-    final blur1Paint = Paint();
-    blur1Paint..color = Color(0xff3670DF);
-    blur1Paint..maskFilter = MaskFilter.blur(BlurStyle.normal, 10);
-    canvas.drawPath(mLinePath!, blur1Paint);
-
-    final blur2Paint = Paint();
-    blur2Paint..color = Color(0xff4983F2);
-    blur2Paint..maskFilter = MaskFilter.blur(BlurStyle.normal, 3);
-    canvas.drawPath(mLinePath!, blur2Paint);
-
-    final blur3Paint = Paint();
-    blur3Paint..color = Color(0xff4983F2);
-    blur3Paint..maskFilter = MaskFilter.blur(BlurStyle.normal, 1);
-    canvas.drawPath(mLinePath!, blur3Paint);
-
-    mLinePath!.reset();
+    canvas.drawPath(shadowPath, shadowPaint);
+    //mLineFillPath!.reset();
+    //mLinePaint..strokeWidth = (3 / scaleX).clamp(0.3, 3.0);
+    //mLinePaint..color = Color(0xffE8F4FF);
+    //canvas.drawPath(mLinePath!, mLinePaint);
+//
+    //final blur1Paint = Paint();
+    //blur1Paint..color = Color(0xff3670DF);
+    //blur1Paint..maskFilter = MaskFilter.blur(BlurStyle.normal, 10);
+    //canvas.drawPath(mLinePath!, blur1Paint);
+//
+    //final blur2Paint = Paint();
+    //blur2Paint..color = Color(0xff4983F2);
+    //blur2Paint..maskFilter = MaskFilter.blur(BlurStyle.normal, 3);
+    //canvas.drawPath(mLinePath!, blur2Paint);
+//
+    //final blur3Paint = Paint();
+    //blur3Paint..color = Color(0xff4983F2);
+    //blur3Paint..maskFilter = MaskFilter.blur(BlurStyle.normal, 1);
+    //canvas.drawPath(mLinePath!, blur3Paint);
   }
 
   void drawMaLine(CandleEntity lastPoint, CandleEntity curPoint, Canvas canvas,

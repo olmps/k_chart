@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 class ChartColors {
@@ -105,7 +107,8 @@ class ChartColors {
 }
 
 class ChartStyle {
-  ChartStyle({
+  ChartStyle(
+    this.byteData, {
     this.topPadding = 30.0,
     this.bottomPadding = 20.0,
     this.childPadding = 12.0,
@@ -126,6 +129,8 @@ class ChartStyle {
     this.nowPriceTextStyle = const TextStyle(fontSize: 10),
     this.minMaxTextStyle = const TextStyle(fontSize: 10),
   });
+
+  final ByteData byteData;
 
   final double topPadding;
   final double bottomPadding;
