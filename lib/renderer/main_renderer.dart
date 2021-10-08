@@ -140,28 +140,40 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     final polylinePath = Path();
     if (lastX == curX) lastX = 0; //起点位置填充
     polylinePath.moveTo(lastX, getY(lastPrice));
-    final polygon = [
-      Offset(lastX, getY(lastX)),
-      Offset((lastX + curX) / 2, getY((lastX + curX) / 2)),
-      Offset(curX, getY(curX)),
-    ];
-    polylinePath.addPolygon(polygon, false);
-    //polylinePath.cubicTo((lastX + curX) / 2, getY(lastPrice),
-    //    (lastX + curX) / 2, getY(curPrice), curX, getY(curPrice));
+    polylinePath.cubicTo((lastX + curX) / 2, getY(lastPrice),
+        (lastX + curX) / 2, getY(curPrice), curX, getY(curPrice));
 
     final polylinePaint = Paint();
 
-    polylinePaint.strokeWidth = (3 / scaleX).clamp(0.3, 3.0);
-    polylinePaint.color = Colors.red;
+    polylinePaint.strokeWidth = 3;
+    polylinePaint.color = Color(0xffE8F4FF);
 
-    canvas.drawPath(polylinePath, polylinePaint);
+    //canvas.drawPath(polylinePath, polylinePaint);
+
+    final line = [
+      Offset(lastX, getY(lastPrice)),
+      Offset(curX, getY(curPrice)),
+    ];
+
+    canvas.drawLine(line.first, line.last, polylinePaint);
+
+    //polylinePaint.maskFilter = MaskFilter.blur(BlurStyle.outer, 10);
+    //canvas.drawLine(line.first, line.last, polylinePaint);
+    //polylinePaint.color = Color(0xffE8F4FF);
+
+    polylinePaint.maskFilter = MaskFilter.blur(BlurStyle.outer, 3);
+    canvas.drawLine(line.first, line.last, polylinePaint);
+    polylinePaint.color = Color(0xff4983F2);
+
+    polylinePaint.maskFilter = MaskFilter.blur(BlurStyle.outer, 1);
+    polylinePaint.color = Color(0xff4983F2);
+    canvas.drawLine(line.first, line.last, polylinePaint);
 
     // Draw shadows
     final shadowPath = Path();
     shadowPath.moveTo(lastX, chartRect.height + chartRect.top);
     shadowPath.lineTo(lastX, getY(lastPrice));
-    shadowPath.cubicTo((lastX + curX) / 2, getY(lastPrice), (lastX + curX) / 2,
-        getY(curPrice), curX, getY(curPrice));
+    shadowPath.lineTo(curX, getY(curPrice));
     shadowPath.lineTo(curX, chartRect.height + chartRect.top);
     shadowPath.close();
 
@@ -176,25 +188,6 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     shadowPaint..shader = shadowShader;
 
     canvas.drawPath(shadowPath, shadowPaint);
-    //mLineFillPath!.reset();
-    //mLinePaint..strokeWidth = (3 / scaleX).clamp(0.3, 3.0);
-    //mLinePaint..color = Color(0xffE8F4FF);
-    //canvas.drawPath(mLinePath!, mLinePaint);
-//
-    //final blur1Paint = Paint();
-    //blur1Paint..color = Color(0xff3670DF);
-    //blur1Paint..maskFilter = MaskFilter.blur(BlurStyle.normal, 10);
-    //canvas.drawPath(mLinePath!, blur1Paint);
-//
-    //final blur2Paint = Paint();
-    //blur2Paint..color = Color(0xff4983F2);
-    //blur2Paint..maskFilter = MaskFilter.blur(BlurStyle.normal, 3);
-    //canvas.drawPath(mLinePath!, blur2Paint);
-//
-    //final blur3Paint = Paint();
-    //blur3Paint..color = Color(0xff4983F2);
-    //blur3Paint..maskFilter = MaskFilter.blur(BlurStyle.normal, 1);
-    //canvas.drawPath(mLinePath!, blur3Paint);
   }
 
   void drawMaLine(CandleEntity lastPoint, CandleEntity curPoint, Canvas canvas,
