@@ -94,19 +94,37 @@ abstract class BaseChartRenderer<T> {
         Paint()..color = backgroundColor,
       );
     }
-    tp.paint(canvas, Offset(textStart, top));
+    tp.paint(
+        canvas,
+        Offset(
+          textStart,
+          rect.center.dy -
+              tp.height / 2 -
+              (tp.height - textStyle.fontSize!) / 4,
+        ));
+
+    print('!!!!');
+    print('LUCASBIANCOGS: TP>HEIGHT: ${tp.height}');
+    print('LUCASBIANCOGS: RECT>HEIGHT: ${rect.height}');
+    print('LUCASBIANCOGS: RECT>CENTER>DY: ${rect.center.dy}');
+    print('LUCASBIANCOGS: FONT>SIZE: ${textStyle.height}');
+    print('LUCASBIANCOGS: FONT>HEIGHT: ${textStyle.fontSize}');
+    print('LUCASBIANCOGS: OFFSET: ${rect.center.dy - (tp.height) / 2}');
+    print('!!!!');
 
     // Draw asset
     canvas.save();
-    final imageScale = textStyle.fontSize! * 0.9 / currencyImage.height;
+    final imageScale =
+        (textStyle.fontSize! * textStyle.height! * 0.7) / currencyImage.height;
     final paint = Paint()
       ..colorFilter = ColorFilter.mode(textStyle.color!, BlendMode.srcATop);
+
     canvas.scale(imageScale);
     canvas.drawImage(
       currencyImage,
       Offset(
-        left / imageScale,
-        y / imageScale - tp.height / 2,
+        (rect.left + 4) / imageScale,
+        (rect.center.dy - (currencyImage.height * imageScale) / 2) / imageScale,
       ),
       paint,
     );
