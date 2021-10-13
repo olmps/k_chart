@@ -93,7 +93,7 @@ abstract class BaseChartRenderer<T> {
     final left = alignCurrencyText == AlignCurrencyText.end ? imageStart : x;
     final right = alignCurrencyText == AlignCurrencyText.end
         ? x
-        : x + tp.width + currencyImage.width;
+        : x + tp.width + (currencyImage.width * imageScale);
     final top = y - tp.height / 2;
 
     final rect =
