@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 export '../chart_style.dart';
 import 'dart:ui' as UI;
 
+import 'package:k_chart/renderer/index.dart';
+
 abstract class BaseChartRenderer<T> {
   double maxValue, minValue;
   late double scaleY;
@@ -51,7 +53,8 @@ abstract class BaseChartRenderer<T> {
 
   void drawText(Canvas canvas, T data, double x);
 
-  void drawRightText(Canvas canvas, TextStyle textStyle, int gridRows);
+  void drawRightText(
+      Canvas canvas, TextStyle textStyle, int gridRows, double coinScale);
 
   /// Returns the start currencyText start
   ///
@@ -63,7 +66,8 @@ abstract class BaseChartRenderer<T> {
     String text,
     double x,
     double y,
-    TextStyle textStyle, {
+    TextStyle textStyle,
+    double coinScale, {
     Color? backgroundColor,
     AlignCurrencyText alignCurrencyText = AlignCurrencyText.end,
   }) {
@@ -105,7 +109,7 @@ abstract class BaseChartRenderer<T> {
 
     // Draw asset
     canvas.save();
-    final imageScale = (tp.height * 0.7) / currencyImage.height;
+    final imageScale = (tp.height * coinScale) / currencyImage.height;
     final paint = Paint()
       ..colorFilter = ColorFilter.mode(textStyle.color!, BlendMode.srcATop);
 
@@ -113,7 +117,7 @@ abstract class BaseChartRenderer<T> {
     canvas.drawImage(
       currencyImage,
       Offset(
-        (rect.left + 4) / imageScale,
+        (textStart - (currencyImage.width * imageScale) - 2) / imageScale,
         (rect.center.dy - (currencyImage.height * imageScale) / 2) / imageScale,
       ),
       paint,

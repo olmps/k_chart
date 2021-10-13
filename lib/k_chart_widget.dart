@@ -119,9 +119,11 @@ class _KChartWidgetState extends State<KChartWidget>
     super.dispose();
   }
 
-  Future<UI.Image> loadUiImage(ByteData data) async {
+  Future<UI.Image> loadUiImage() async {
+    final byteData =
+        await rootBundle.load('packages/k_chart/assets/currency_coin.png');
     final Completer<UI.Image> completer = Completer();
-    UI.decodeImageFromList(Uint8List.view(data.buffer), (UI.Image img) {
+    UI.decodeImageFromList(Uint8List.view(byteData.buffer), (UI.Image img) {
       return completer.complete(img);
     });
     return completer.future;
@@ -130,10 +132,10 @@ class _KChartWidgetState extends State<KChartWidget>
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: loadUiImage(widget.chartStyle.byteData),
+      future: loadUiImage(),
       builder: (context, data) {
         if (!data.hasData) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         }
         if (widget.datas != null && widget.datas!.isEmpty) {
           mScrollX = mSelectX = 0.0;

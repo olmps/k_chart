@@ -84,91 +84,67 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
-  Future<ByteData> getByteData() async {
-    return rootBundle.load('assets/currency_coin.png');
-  }
-
   @override
   Widget build(BuildContext context) {
+    ChartStyle chartStyle = ChartStyle(
+      axisLabelTextStyle: TextStyle(
+        fontFamily: 'Rubik',
+        fontSize: 10,
+        height: 1,
+        letterSpacing: 0,
+        fontWeight: FontWeight.w400,
+        color: Color(0xff424343),
+      ),
+      nowPriceTextStyle: TextStyle(
+        fontFamily: 'Rubik',
+        fontSize: 12,
+        height: 1.33,
+        letterSpacing: 0,
+        fontWeight: FontWeight.w400,
+        color: Colors.blue,
+      ),
+      minMaxTextStyle: TextStyle(
+        fontFamily: 'Rubik',
+        fontSize: 12,
+        height: 1.33,
+        letterSpacing: 0,
+        fontWeight: FontWeight.w400,
+        color: Colors.white,
+      ),
+      dateTimeFormat: TimeFormat.DAY_MONTH_YEAR,
+    );
+
+    ChartColors chartColors = ChartColors(
+        upColor: Color(0xff3E9428),
+        dnColor: Color(0xffB83E3A),
+        minMaxBackgroundColor: Color(0xff42434350),
+        nowPriceBackgroundColor: Color(0x203670DF),
+        gridColor: Color(0xff2F3131),
+        lineFillColor: Color(0xffE8F4FF),
+        lineShadowColor: Color(0x554C86CD),
+        lineBlurs: [
+          Paint()
+            ..maskFilter = MaskFilter.blur(BlurStyle.outer, 3)
+            ..color = Color(0xff4983F2),
+          Paint()
+            ..maskFilter = MaskFilter.blur(BlurStyle.outer, 1)
+            ..color = Color(0xff4983F2),
+        ]);
     return Scaffold(
       body: Container(
-        color: Color(0xff131414),
-        child: FutureBuilder<ByteData?>(
-            future: getByteData(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Container();
-              }
-
-              if (!snapshot.hasData) {
-                return Container(
-                  child: Text('Error', style: TextStyle(color: Colors.white)),
-                  alignment: Alignment.center,
-                );
-              }
-
-              final byteData = snapshot.data as ByteData;
-
-              ChartStyle chartStyle = ChartStyle(
-                byteData,
-                axisLabelTextStyle: TextStyle(
-                  fontFamily: 'Rubik',
-                  fontSize: 10,
-                  height: 1,
-                  letterSpacing: 0,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xff424343),
-                ),
-                nowPriceTextStyle: TextStyle(
-                  fontFamily: 'Rubik',
-                  fontSize: 12,
-                  height: 1.33,
-                  letterSpacing: 0,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.blue,
-                ),
-                minMaxTextStyle: TextStyle(
-                  fontFamily: 'Rubik',
-                  fontSize: 12,
-                  height: 1.33,
-                  letterSpacing: 0,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white,
-                ),
-                dateTimeFormat: TimeFormat.DAY_MONTH_YEAR,
-              );
-
-              ChartColors chartColors = ChartColors(
-                  upColor: Color(0xff3E9428),
-                  dnColor: Color(0xffB83E3A),
-                  minMaxBackgroundColor: Color(0xff42434350),
-                  nowPriceBackgroundColor: Color(0x203670DF),
-                  gridColor: Color(0xff2F3131),
-                  lineFillColor: Color(0xffE8F4FF),
-                  lineShadowColor: Color(0x554C86CD),
-                  lineBlurs: [
-                    Paint()
-                      ..maskFilter = MaskFilter.blur(BlurStyle.outer, 3)
-                      ..color = Color(0xff4983F2),
-                    Paint()
-                      ..maskFilter = MaskFilter.blur(BlurStyle.outer, 1)
-                      ..color = Color(0xff4983F2),
-                  ]);
-
-              return KChartWidget(
-                datas,
-                chartStyle,
-                chartColors,
-                isLine: true,
-                mainState: MainState.NONE,
-                volHidden: true,
-                secondaryState: SecondaryState.NONE,
-                fixedLength: 2,
-                maDayList: [1, 100, 1000],
-                rightPadding: 80,
-              );
-            }),
-      ),
+          color: Color(0xff131414),
+          child: KChartWidget(
+            datas,
+            chartStyle,
+            chartColors,
+            isLine: false,
+            mainState: MainState.NONE,
+            volHidden: true,
+            secondaryState: SecondaryState.NONE,
+            fixedLength: 2,
+            maDayList: [1, 100, 1000],
+            rightPadding: 80,
+          )),
     );
   }
 

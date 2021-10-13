@@ -113,8 +113,10 @@ class ChartColors {
 }
 
 class ChartStyle {
-  ChartStyle(
-    this.byteData, {
+  ChartStyle({
+    this.axisCoinScale = 0.9,
+    this.nowCoinScale = 0.7,
+    this.maxMinCoinScale = 0.7,
     this.topPadding = 30.0,
     this.bottomPadding = 20.0,
     this.childPadding = 12.0,
@@ -136,7 +138,9 @@ class ChartStyle {
     this.minMaxTextStyle = const TextStyle(fontSize: 10),
   });
 
-  final ByteData byteData;
+  final double axisCoinScale;
+  final double nowCoinScale;
+  final double maxMinCoinScale;
 
   final double topPadding;
   final double bottomPadding;

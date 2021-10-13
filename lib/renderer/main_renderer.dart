@@ -248,7 +248,8 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
   }
 
   @override
-  void drawRightText(Canvas canvas, TextStyle textStyle, int gridRows) {
+  void drawRightText(
+      Canvas canvas, TextStyle textStyle, int gridRows, double coinScale) {
     double rowSpace = chartRect.height / gridRows;
     for (int i = 0; i <= gridRows; ++i) {
       double value = (gridRows - i) * rowSpace / scaleY + minValue;
@@ -256,13 +257,27 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       final x = chartRect.width - gridPadding + 4;
       if (i == 0) {
         drawCurrencyText(
-            currencyImage, canvas, "${format(value)}", x, topPadding, textStyle,
-            alignCurrencyText: AlignCurrencyText.start);
+          currencyImage,
+          canvas,
+          "${format(value)}",
+          x,
+          topPadding,
+          textStyle,
+          coinScale,
+          alignCurrencyText: AlignCurrencyText.start,
+        );
       } else {
         final y = rowSpace * i + topPadding;
         drawCurrencyText(
-            currencyImage, canvas, "${format(value)}", x, y, textStyle,
-            alignCurrencyText: AlignCurrencyText.start);
+          currencyImage,
+          canvas,
+          "${format(value)}",
+          x,
+          y,
+          textStyle,
+          coinScale,
+          alignCurrencyText: AlignCurrencyText.start,
+        );
       }
     }
   }

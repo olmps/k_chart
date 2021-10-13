@@ -158,11 +158,12 @@ class ChartPainter extends BaseChartPainter {
   @override
   void drawRightText(Canvas canvas) {
     final textStyle = this.chartStyle.axisLabelTextStyle;
+    final coinScale = this.chartStyle.axisCoinScale;
     if (!hideGrid) {
-      mMainRenderer.drawRightText(canvas, textStyle, mGridRows);
+      mMainRenderer.drawRightText(canvas, textStyle, mGridRows, coinScale);
     }
-    mVolRenderer?.drawRightText(canvas, textStyle, mGridRows);
-    mSecondaryRenderer?.drawRightText(canvas, textStyle, mGridRows);
+    mVolRenderer?.drawRightText(canvas, textStyle, mGridRows, coinScale);
+    mSecondaryRenderer?.drawRightText(canvas, textStyle, mGridRows, coinScale);
   }
 
   @override
@@ -318,6 +319,7 @@ class ChartPainter extends BaseChartPainter {
       x - tp.width,
       y,
       chartStyle.minMaxTextStyle,
+      chartStyle.maxMinCoinScale,
       backgroundColor: chartColors.minMaxBackgroundColor,
     );
 
@@ -338,6 +340,7 @@ class ChartPainter extends BaseChartPainter {
       x + tp.width,
       y,
       chartStyle.minMaxTextStyle,
+      chartStyle.maxMinCoinScale,
       backgroundColor: chartColors.minMaxBackgroundColor,
       alignCurrencyText: AlignCurrencyText.start,
     );
@@ -367,6 +370,7 @@ class ChartPainter extends BaseChartPainter {
       size.width - 4,
       y,
       this.chartStyle.nowPriceTextStyle,
+      this.chartStyle.nowCoinScale,
       backgroundColor: this.chartColors.nowPriceBackgroundColor,
     );
 

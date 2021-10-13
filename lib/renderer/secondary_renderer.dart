@@ -161,7 +161,12 @@ class SecondaryRenderer extends BaseChartRenderer<MACDEntity> {
   }
 
   @override
-  void drawRightText(canvas, textStyle, int gridRows) {
+  void drawRightText(
+    canvas,
+    textStyle,
+    int gridRows,
+    double coinScale,
+  ) {
     TextPainter maxTp = TextPainter(
         text: TextSpan(text: "${format(maxValue)}", style: textStyle),
         textDirection: TextDirection.ltr);
