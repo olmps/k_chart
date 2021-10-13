@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<ByteData> getByteData() async {
-    return rootBundle.load('packages/k_chart/assets/currency_coin.png');
+      return rootBundle.load('assets/currency_coin.png');
   }
 
   @override
@@ -93,11 +93,18 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Container(
         color: Color(0xff131414),
-        child: FutureBuilder<Object>(
+        child: FutureBuilder<ByteData?>(
             future: getByteData(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Container();
+              }
+
+              if (!snapshot.hasData) {
+                return Container(
+                  child: Text('Error', style: TextStyle(color: Colors.white)),
+                  alignment: Alignment.center,
+                );
               }
 
               final byteData = snapshot.data as ByteData;

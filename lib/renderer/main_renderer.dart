@@ -146,6 +146,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     final polylinePaint = Paint();
 
     polylinePaint.strokeWidth = 3;
+    polylinePaint.style = PaintingStyle.stroke;
     polylinePaint.color = Color(0xffE8F4FF);
 
     //canvas.drawPath(polylinePath, polylinePaint);
@@ -163,11 +164,13 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
 
     polylinePaint.maskFilter = MaskFilter.blur(BlurStyle.outer, 3);
     canvas.drawLine(line.first, line.last, polylinePaint);
+    //canvas.drawPath(polylinePath, polylinePaint);
     polylinePaint.color = Color(0xff4983F2);
 
     polylinePaint.maskFilter = MaskFilter.blur(BlurStyle.outer, 1);
     polylinePaint.color = Color(0xff4983F2);
     canvas.drawLine(line.first, line.last, polylinePaint);
+    //canvas.drawPath(polylinePath, polylinePaint);
 
     // Draw shadows
     final shadowPath = Path();
