@@ -132,6 +132,8 @@ class ChartStyle {
     this.nowPriceLineWidth = 1,
     this.gridRows = 3,
     this.gridColumns = 3,
+    this.rightPadding = 0,
+    this.gridPadding = 70,
     this.dateTimeFormat,
     this.axisLabelTextStyle = const TextStyle(fontSize: 10),
     this.nowPriceTextStyle = const TextStyle(fontSize: 10),
@@ -145,6 +147,8 @@ class ChartStyle {
   final double topPadding;
   final double bottomPadding;
   final double childPadding;
+  final double rightPadding;
+  final double gridPadding;
   final double pointWidth;
   final double candleWidth;
   final double candleLineWidth;

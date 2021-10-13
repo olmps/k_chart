@@ -30,8 +30,6 @@ class ChartPainter extends BaseChartPainter {
   final bool hideGrid;
   final bool showNowPrice;
   final UI.Image currencyImage;
-  final double rightPadding;
-  final double gridPadding;
 
   ChartPainter(
     this.chartStyle,
@@ -42,8 +40,6 @@ class ChartPainter extends BaseChartPainter {
     required isLongPass,
     required selectX,
     required this.currencyImage,
-    required this.rightPadding,
-    required this.gridPadding,
     mainState,
     volHidden,
     secondaryState,
@@ -63,7 +59,6 @@ class ChartPainter extends BaseChartPainter {
           mainState: mainState,
           volHidden: volHidden,
           secondaryState: secondaryState,
-          rightPadding: rightPadding,
           isLine: isLine,
         ) {
     selectPointPaint = Paint()
@@ -89,7 +84,7 @@ class ChartPainter extends BaseChartPainter {
       mMainMaxValue,
       mMainMinValue,
       mTopPadding,
-      gridPadding,
+      chartStyle.gridPadding,
       mainState,
       isLine,
       fixedLength,
@@ -120,8 +115,8 @@ class ChartPainter extends BaseChartPainter {
   void drawGrid(Canvas canvas, Size size) {
     if (!hideGrid) {
       canvas.save();
-      canvas
-          .clipRect(Rect.fromLTRB(0, 0, size.width - gridPadding, size.height));
+      canvas.clipRect(Rect.fromLTRB(
+          0, 0, size.width - chartStyle.gridPadding, size.height));
       mMainRenderer.drawGrid(
           canvas, mGridRows, mGridColumns, chartColors.gridColor);
       mVolRenderer?.drawGrid(
@@ -135,8 +130,8 @@ class ChartPainter extends BaseChartPainter {
   @override
   void drawChart(Canvas canvas, Size size) {
     canvas.save();
-    canvas
-        .clipRect(Rect.fromLTRB(0, 0, size.width - rightPadding, size.height));
+    canvas.clipRect(
+        Rect.fromLTRB(0, 0, size.width - chartStyle.rightPadding, size.height));
     canvas.translate(mTranslateX * scaleX, 0.0);
     canvas.scale(scaleX, 1.0);
     for (int i = mStartIndex; datas != null && i <= mStopIndex; i++) {
@@ -285,7 +280,7 @@ class ChartPainter extends BaseChartPainter {
     }
     canvas.save();
     canvas.clipRect(
-      Rect.fromLTRB(0, 0, size.width - rightPadding, size.height),
+      Rect.fromLTRB(0, 0, size.width - chartStyle.rightPadding, size.height),
     );
 
     final minX = translateXtoX(getX(mMainMinIndex));

@@ -71,26 +71,37 @@ abstract class BaseChartRenderer<T> {
     Color? backgroundColor,
     AlignCurrencyText alignCurrencyText = AlignCurrencyText.end,
   }) {
-    // Draw text
-    TextSpan span = TextSpan(text: text, style: textStyle);
-    TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
+    final imageScale = ((textStyle.height! * textStyle.fontSize!) * coinScale) /
+        currencyImage.height;
+
+    final span = TextSpan(text: text, style: textStyle);
+    final tp = TextPainter(text: span, textDirection: TextDirection.ltr);
     tp.layout();
     final textStart = alignCurrencyText == AlignCurrencyText.end
         ? x - tp.width
-        : x + currencyImage.width;
-    final left = alignCurrencyText == AlignCurrencyText.end
-        ? textStart - currencyImage.width
-        : x;
+        : x + (currencyImage.width * imageScale);
+
+    // Draw text
+    tp.paint(
+        canvas,
+        Offset(
+          textStart,
+          y - tp.height / 2 - (tp.height - textStyle.fontSize!) / 4,
+        ));
+
+    final imageStart = (textStart - (currencyImage.width * imageScale) - 2);
+    final left = alignCurrencyText == AlignCurrencyText.end ? imageStart : x;
     final right = alignCurrencyText == AlignCurrencyText.end
         ? x
         : x + tp.width + currencyImage.width;
-    double top = y - tp.height / 2;
+    final top = y - tp.height / 2;
 
     final rect =
         Rect.fromLTRB(left - 4, top - 2, right + 4, top + tp.height + 2);
 
     final rRect = RRect.fromRectAndRadius(rect, Radius.circular(4));
 
+    // Draw rectangle
     rect.deflate(2);
     if (backgroundColor != null) {
       canvas.drawRRect(
@@ -98,26 +109,16 @@ abstract class BaseChartRenderer<T> {
         Paint()..color = backgroundColor,
       );
     }
-    tp.paint(
-        canvas,
-        Offset(
-          textStart,
-          rect.center.dy -
-              tp.height / 2 -
-              (tp.height - textStyle.fontSize!) / 4,
-        ));
 
     // Draw asset
-    canvas.save();
-    final imageScale = (tp.height * coinScale) / currencyImage.height;
     final paint = Paint()
       ..colorFilter = ColorFilter.mode(textStyle.color!, BlendMode.srcATop);
-
+    canvas.save();
     canvas.scale(imageScale);
     canvas.drawImage(
       currencyImage,
       Offset(
-        (textStart - (currencyImage.width * imageScale) - 2) / imageScale,
+        imageStart / imageScale,
         (rect.center.dy - (currencyImage.height * imageScale) / 2) / imageScale,
       ),
       paint,

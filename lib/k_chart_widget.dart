@@ -41,8 +41,6 @@ class KChartWidget extends StatefulWidget {
   final bool showInfoDialog;
   final Map<String, ChartTranslations> translations;
   final List<String> timeFormat;
-  final double rightPadding;
-  final double gridPadding;
 
   //当屏幕滚动到尽头会调用，真为拉到屏幕右侧尽头，假为拉到屏幕左侧尽头
   final Function(bool)? onLoadMore;
@@ -77,8 +75,6 @@ class KChartWidget extends StatefulWidget {
     this.flingTime = 600,
     this.flingRatio = 0.5,
     this.flingCurve = Curves.decelerate,
-    this.rightPadding = 0,
-    this.gridPadding = 70,
     this.isOnDrag,
   });
 
@@ -158,8 +154,6 @@ class _KChartWidgetState extends State<KChartWidget>
           sink: mInfoWindowStream?.sink,
           fixedLength: widget.fixedLength,
           currencyImage: data.data as UI.Image,
-          rightPadding: widget.rightPadding,
-          gridPadding: widget.gridPadding,
           maDayList: widget.maDayList,
         );
 

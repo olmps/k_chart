@@ -112,24 +112,26 @@ class _MyHomePageState extends State<MyHomePage> {
         color: Colors.white,
       ),
       dateTimeFormat: TimeFormat.DAY_MONTH_YEAR,
+      rightPadding: 80,
     );
 
     ChartColors chartColors = ChartColors(
-        upColor: Color(0xff3E9428),
-        dnColor: Color(0xffB83E3A),
-        minMaxBackgroundColor: Color(0xff42434350),
-        nowPriceBackgroundColor: Color(0x203670DF),
-        gridColor: Color(0xff2F3131),
-        lineFillColor: Color(0xffE8F4FF),
-        lineShadowColor: Color(0x554C86CD),
-        lineBlurs: [
-          Paint()
-            ..maskFilter = MaskFilter.blur(BlurStyle.outer, 3)
-            ..color = Color(0xff4983F2),
-          Paint()
-            ..maskFilter = MaskFilter.blur(BlurStyle.outer, 1)
-            ..color = Color(0xff4983F2),
-        ]);
+      upColor: Color(0xff3E9428),
+      dnColor: Color(0xffB83E3A),
+      minMaxBackgroundColor: Color(0xff42434350),
+      nowPriceBackgroundColor: Color(0x203670DF),
+      gridColor: Color(0xff2F3131),
+      lineFillColor: Color(0xffE8F4FF),
+      lineShadowColor: Color(0x554C86CD),
+      lineBlurs: [
+        Paint()
+          ..maskFilter = MaskFilter.blur(BlurStyle.outer, 3)
+          ..color = Color(0xff4983F2),
+        Paint()
+          ..maskFilter = MaskFilter.blur(BlurStyle.outer, 1)
+          ..color = Color(0xff4983F2),
+      ],
+    );
     return Scaffold(
       body: Container(
           color: Color(0xff131414),
@@ -143,7 +145,6 @@ class _MyHomePageState extends State<MyHomePage> {
             secondaryState: SecondaryState.NONE,
             fixedLength: 2,
             maDayList: [1, 100, 1000],
-            rightPadding: 80,
           )),
     );
   }

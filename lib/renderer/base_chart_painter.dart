@@ -43,7 +43,6 @@ abstract class BaseChartPainter extends CustomPainter {
   final ChartStyle chartStyle;
   late double mPointWidth;
   List<String> mFormats = [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn]; //格式化时间
-  final double rightPadding;
 
   BaseChartPainter(
     this.chartStyle, {
@@ -52,7 +51,6 @@ abstract class BaseChartPainter extends CustomPainter {
     required this.scrollX,
     required this.isLongPress,
     required this.selectX,
-    required this.rightPadding,
     this.mainState = MainState.MA,
     this.volHidden = false,
     this.secondaryState = SecondaryState.MACD,
@@ -185,7 +183,8 @@ abstract class BaseChartPainter extends CustomPainter {
     maxScrollX = getMinTranslateX().abs();
     setTranslateXFromScrollX(scrollX);
     mStartIndex = indexOfTranslateX(xToTranslateX(0));
-    mStopIndex = indexOfTranslateX(xToTranslateX(mWidth - rightPadding));
+    mStopIndex =
+        indexOfTranslateX(xToTranslateX(mWidth - chartStyle.rightPadding));
     for (int i = mStartIndex; i <= mStopIndex; i++) {
       var item = datas![i];
       getMainMaxMinValue(item, i);
@@ -329,7 +328,9 @@ abstract class BaseChartPainter extends CustomPainter {
 
   /// Get the minimum value of translation
   double getMinTranslateX() {
-    final x = (-mDataLen + (mWidth - rightPadding) / scaleX - mPointWidth / 2);
+    final x = (-mDataLen +
+        (mWidth - chartStyle.rightPadding) / scaleX -
+        mPointWidth / 2);
     return x >= 0 ? 0.0 : x;
   }
 
