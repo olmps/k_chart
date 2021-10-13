@@ -93,4 +93,8 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
           Offset(columnSpace * i, chartRect.bottom), gridPaint);
     }
   }
+
+  @override
+  void drawLineChart(Canvas canvas, Size size, List<KLineEntity> datas,
+      double Function(int) getX) {}
 }

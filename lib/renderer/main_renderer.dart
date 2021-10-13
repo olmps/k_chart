@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:k_chart/entity/k_line_entity.dart';
 
 import '../entity/candle_entity.dart';
 import '../k_chart_widget.dart' show MainState;
@@ -115,8 +116,8 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       drawCandle(curPoint, canvas, curX);
     }
     if (isLine == true) {
-      drawPolyline(
-          lastPoint.close, curPoint.close, canvas, lastX, curX, scaleX);
+      // drawPolyline(
+      //     lastPoint.close, curPoint.close, canvas, lastX, curX, scaleX);
     } else if (state == MainState.MA) {
       drawMaLine(lastPoint, curPoint, canvas, lastX, curX);
     } else if (state == MainState.BOLL) {
@@ -244,6 +245,57 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
           chartPaint);
       canvas.drawRect(
           Rect.fromLTRB(curX - lineR, high, curX + lineR, low), chartPaint);
+    }
+  }
+
+  @override
+  void drawLineChart(
+    Canvas canvas,
+    Size size,
+    List<KLineEntity> datas,
+    double Function(int) getX,
+  ) {
+    final points = datas
+        .asMap()
+        .map((index, data) =>
+            MapEntry(index, Offset(getX(index), getY(data.close))))
+        .values
+        .toList();
+
+    final linePath = Path()..addPolygon(points, false);
+
+    final polylinePaint = Paint();
+    polylinePaint.strokeWidth = (3 / scaleX).clamp(0, 3);
+    polylinePaint.style = PaintingStyle.stroke;
+    polylinePaint.color = chartColors.lineFillColor;
+
+    // Draw main line
+    canvas.drawPath(linePath, polylinePaint);
+
+    // Draw customizations
+    chartColors.lineBlurs.forEach((lineBlur) {
+      polylinePaint.color = lineBlur.color;
+      polylinePaint.maskFilter = lineBlur.maskFilter;
+      canvas.drawPath(linePath, polylinePaint);
+    });
+
+    // Draw shadows
+    if (chartColors.lineShadowColor != null) {
+      points.insert(0, Offset(points.first.dx, size.height));
+      points.add(Offset(points.last.dx, size.height));
+      final shadowPath = Path()..addPolygon(points, false);
+
+      final shadowPaint = Paint();
+      final shadowShader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        tileMode: TileMode.clamp,
+        colors: [chartColors.lineShadowColor!, Colors.transparent],
+      ).createShader(Rect.fromLTRB(
+          chartRect.left, chartRect.top, chartRect.right, chartRect.bottom));
+      shadowPaint..shader = shadowShader;
+
+      canvas.drawPath(shadowPath, shadowPaint);
     }
   }
 

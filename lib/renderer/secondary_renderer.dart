@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:k_chart/entity/k_line_entity.dart';
 
 import '../entity/macd_entity.dart';
 import '../k_chart_widget.dart' show SecondaryState;
@@ -195,4 +196,8 @@ class SecondaryRenderer extends BaseChartRenderer<MACDEntity> {
           Offset(columnSpace * i, chartRect.bottom), gridPaint);
     }
   }
+
+  @override
+  void drawLineChart(Canvas canvas, Size size, List<KLineEntity> datas,
+      double Function(int) getX) {}
 }

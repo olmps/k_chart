@@ -147,6 +147,10 @@ class ChartPainter extends BaseChartPainter {
           lastPoint, curPoint, lastX, curX, size, canvas);
     }
 
+    if (isLine) {
+      mMainRenderer.drawLineChart(canvas, size, datas!, getX);
+    }
+
     canvas.restore();
   }
 

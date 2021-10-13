@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:k_chart/entity/k_line_entity.dart';
 
 export '../chart_style.dart';
 import 'dart:ui' as UI;
@@ -52,6 +53,13 @@ abstract class BaseChartRenderer<T> {
   void drawGrid(Canvas canvas, int gridRows, int gridColumns, [Color? color]);
 
   void drawText(Canvas canvas, T data, double x);
+
+  void drawLineChart(
+    Canvas canvas,
+    Size size,
+    List<KLineEntity> datas,
+    double Function(int) getX,
+  );
 
   void drawRightText(
       Canvas canvas, TextStyle textStyle, int gridRows, double coinScale);
