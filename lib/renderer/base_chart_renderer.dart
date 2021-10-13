@@ -105,8 +105,7 @@ abstract class BaseChartRenderer<T> {
 
     // Draw asset
     canvas.save();
-    final imageScale =
-        (textStyle.fontSize! * textStyle.height! * 0.7) / currencyImage.height;
+    final imageScale = (tp.height * 0.7) / currencyImage.height;
     final paint = Paint()
       ..colorFilter = ColorFilter.mode(textStyle.color!, BlendMode.srcATop);
 

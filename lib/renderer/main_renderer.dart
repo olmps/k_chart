@@ -115,7 +115,8 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       drawCandle(curPoint, canvas, curX);
     }
     if (isLine == true) {
-      drawPolyline(lastPoint.close, curPoint.close, canvas, lastX, curX);
+      drawPolyline(
+          lastPoint.close, curPoint.close, canvas, lastX, curX, scaleX);
     } else if (state == MainState.MA) {
       drawMaLine(lastPoint, curPoint, canvas, lastX, curX);
     } else if (state == MainState.BOLL) {
@@ -136,61 +137,50 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     Canvas canvas,
     double lastX,
     double curX,
+    double scaleX,
   ) {
-    final polylinePath = Path();
-    if (lastX == curX) lastX = 0; //起点位置填充
-    polylinePath.moveTo(lastX, getY(lastPrice));
-    polylinePath.cubicTo((lastX + curX) / 2, getY(lastPrice),
-        (lastX + curX) / 2, getY(curPrice), curX, getY(curPrice));
-
-    final polylinePaint = Paint();
-
-    polylinePaint.strokeWidth = 3;
-    polylinePaint.style = PaintingStyle.stroke;
-    polylinePaint.color = Color(0xffE8F4FF);
-
-    //canvas.drawPath(polylinePath, polylinePaint);
-
+    if (lastX == curX) lastX = 0;
     final line = [
       Offset(lastX, getY(lastPrice)),
       Offset(curX, getY(curPrice)),
     ];
 
+    final polylinePaint = Paint();
+    polylinePaint.strokeWidth = (3 / scaleX).clamp(0, 3);
+    polylinePaint.style = PaintingStyle.stroke;
+    polylinePaint.color = chartColors.lineFillColor;
+
+    // Draw main line
     canvas.drawLine(line.first, line.last, polylinePaint);
 
-    //polylinePaint.maskFilter = MaskFilter.blur(BlurStyle.outer, 10);
-    //canvas.drawLine(line.first, line.last, polylinePaint);
-    //polylinePaint.color = Color(0xffE8F4FF);
-
-    polylinePaint.maskFilter = MaskFilter.blur(BlurStyle.outer, 3);
-    canvas.drawLine(line.first, line.last, polylinePaint);
-    //canvas.drawPath(polylinePath, polylinePaint);
-    polylinePaint.color = Color(0xff4983F2);
-
-    polylinePaint.maskFilter = MaskFilter.blur(BlurStyle.outer, 1);
-    polylinePaint.color = Color(0xff4983F2);
-    canvas.drawLine(line.first, line.last, polylinePaint);
-    //canvas.drawPath(polylinePath, polylinePaint);
+    // Draw customizations
+    chartColors.lineBlurs.forEach((lineBlur) {
+      polylinePaint.color = lineBlur.color;
+      polylinePaint.maskFilter = lineBlur.maskFilter;
+      canvas.drawLine(line.first, line.last, polylinePaint);
+    });
 
     // Draw shadows
-    final shadowPath = Path();
-    shadowPath.moveTo(lastX, chartRect.height + chartRect.top);
-    shadowPath.lineTo(lastX, getY(lastPrice));
-    shadowPath.lineTo(curX, getY(curPrice));
-    shadowPath.lineTo(curX, chartRect.height + chartRect.top);
-    shadowPath.close();
+    if (chartColors.lineShadowColor != null) {
+      final shadowPath = Path();
+      shadowPath.moveTo(lastX, chartRect.height + chartRect.top);
+      shadowPath.lineTo(lastX, getY(lastPrice));
+      shadowPath.lineTo(curX, getY(curPrice));
+      shadowPath.lineTo(curX, chartRect.height + chartRect.top);
+      shadowPath.close();
 
-    final shadowPaint = Paint();
-    final shadowShader = LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      tileMode: TileMode.clamp,
-      colors: [this.chartColors.lineFillColor, Colors.transparent],
-    ).createShader(Rect.fromLTRB(
-        chartRect.left, chartRect.top, chartRect.right, chartRect.bottom));
-    shadowPaint..shader = shadowShader;
+      final shadowPaint = Paint();
+      final shadowShader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        tileMode: TileMode.clamp,
+        colors: [chartColors.lineShadowColor!, Colors.transparent],
+      ).createShader(Rect.fromLTRB(
+          chartRect.left, chartRect.top, chartRect.right, chartRect.bottom));
+      shadowPaint..shader = shadowShader;
 
-    canvas.drawPath(shadowPath, shadowPaint);
+      canvas.drawPath(shadowPath, shadowPaint);
+    }
   }
 
   void drawMaLine(CandleEntity lastPoint, CandleEntity curPoint, Canvas canvas,

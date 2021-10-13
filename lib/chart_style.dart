@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 class ChartColors {
   ChartColors({
     this.kLineColor = const Color(0xff4C86CD),
-    this.lineFillColor = const Color(0x554C86CD),
+    this.lineFillColor = const Color(0xffE8F4FF),
+    this.lineShadowColor,
+    this.lineBlurs = const [],
     this.ma5Color = const Color(0xffC9B885),
     this.ma10Color = const Color(0xff6CB0A6),
     this.ma30Color = const Color(0xff9979C6),
@@ -43,10 +45,14 @@ class ChartColors {
 
   /// BackgroundColor
   final Color kLineColor;
-  final Color lineFillColor;
   final Color ma5Color;
   final Color ma10Color;
   final Color ma30Color;
+
+  /// Line chart
+  final Color lineFillColor;
+  final Color? lineShadowColor;
+  final List<Paint> lineBlurs;
 
   /// Up candle color
   final Color upColor;

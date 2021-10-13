@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<ByteData> getByteData() async {
-      return rootBundle.load('assets/currency_coin.png');
+    return rootBundle.load('assets/currency_coin.png');
   }
 
   @override
@@ -139,12 +139,21 @@ class _MyHomePageState extends State<MyHomePage> {
               );
 
               ChartColors chartColors = ChartColors(
-                upColor: Color(0xff3E9428),
-                dnColor: Color(0xffB83E3A),
-                minMaxBackgroundColor: Color(0xff42434350),
-                nowPriceBackgroundColor: Color(0x203670DF),
-                gridColor: Color(0xff2F3131),
-              );
+                  upColor: Color(0xff3E9428),
+                  dnColor: Color(0xffB83E3A),
+                  minMaxBackgroundColor: Color(0xff42434350),
+                  nowPriceBackgroundColor: Color(0x203670DF),
+                  gridColor: Color(0xff2F3131),
+                  lineFillColor: Color(0xffE8F4FF),
+                  lineShadowColor: Color(0x554C86CD),
+                  lineBlurs: [
+                    Paint()
+                      ..maskFilter = MaskFilter.blur(BlurStyle.outer, 3)
+                      ..color = Color(0xff4983F2),
+                    Paint()
+                      ..maskFilter = MaskFilter.blur(BlurStyle.outer, 1)
+                      ..color = Color(0xff4983F2),
+                  ]);
 
               return KChartWidget(
                 datas,
