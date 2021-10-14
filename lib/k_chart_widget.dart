@@ -53,6 +53,7 @@ class KChartWidget extends StatefulWidget {
   final Function(bool)? isOnDrag;
   final ChartColors chartColors;
   final ChartStyle chartStyle;
+  final bool detailsEnabled;
 
   KChartWidget(
     this.datas,
@@ -75,6 +76,7 @@ class KChartWidget extends StatefulWidget {
     this.flingTime = 600,
     this.flingRatio = 0.5,
     this.flingCurve = Curves.decelerate,
+    this.detailsEnabled = false,
     this.isOnDrag,
   });
 
@@ -198,22 +200,28 @@ class _KChartWidgetState extends State<KChartWidget>
                 _lastScale = mScaleX;
               },
               onLongPressStart: (details) {
-                isLongPress = true;
-                if (mSelectX != details.globalPosition.dx) {
-                  mSelectX = details.globalPosition.dx;
-                  notifyChanged();
+                if (widget.detailsEnabled) {
+                  isLongPress = true;
+                  if (mSelectX != details.globalPosition.dx) {
+                    mSelectX = details.globalPosition.dx;
+                    notifyChanged();
+                  }
                 }
               },
               onLongPressMoveUpdate: (details) {
-                if (mSelectX != details.globalPosition.dx) {
-                  mSelectX = details.globalPosition.dx;
-                  notifyChanged();
+                if (widget.detailsEnabled) {
+                  if (mSelectX != details.globalPosition.dx) {
+                    mSelectX = details.globalPosition.dx;
+                    notifyChanged();
+                  }
                 }
               },
               onLongPressEnd: (details) {
-                isLongPress = false;
-                mInfoWindowStream?.sink.add(null);
-                notifyChanged();
+                if (widget.detailsEnabled) {
+                  isLongPress = false;
+                  mInfoWindowStream?.sink.add(null);
+                  notifyChanged();
+                }
               },
               child: Stack(
                 children: <Widget>[

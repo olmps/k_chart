@@ -139,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
             datas,
             chartStyle,
             chartColors,
-            isLine: true,
+            isLine: false,
             mainState: MainState.NONE,
             volHidden: true,
             secondaryState: SecondaryState.NONE,
