@@ -302,9 +302,14 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
   @override
   void drawRightText(
       Canvas canvas, TextStyle textStyle, int gridRows, double coinScale) {
-    double rowSpace = chartRect.height / gridRows;
+    double rowSpace = (chartRect.height) / gridRows;
+    final contentPaddingValue =
+        (_contentPadding / chartRect.height) * (maxValue - minValue);
+
     for (int i = 0; i <= gridRows; ++i) {
-      double value = (gridRows - i) * rowSpace / scaleY + minValue;
+      double value = ((gridRows - i) * (rowSpace / scaleY)) +
+          minValue -
+          contentPaddingValue;
 
       final x = chartRect.width - gridPadding + 4;
       if (i == 0) {

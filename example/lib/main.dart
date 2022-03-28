@@ -139,6 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
             datas,
             chartStyle,
             chartColors,
+            nowPrice: 44549.19,
             isLine: false,
             mainState: MainState.NONE,
             volHidden: true,

@@ -14,6 +14,7 @@ export 'package:flutter/material.dart'
 abstract class BaseChartPainter extends CustomPainter {
   static double maxScrollX = 0.0;
   List<KLineEntity>? datas;
+  final double? nowPrice;
   MainState mainState;
 
   SecondaryState secondaryState;
@@ -47,6 +48,7 @@ abstract class BaseChartPainter extends CustomPainter {
   BaseChartPainter(
     this.chartStyle, {
     this.datas,
+    this.nowPrice,
     required this.scaleX,
     required this.scrollX,
     required this.isLongPress,
@@ -112,7 +114,9 @@ abstract class BaseChartPainter extends CustomPainter {
 
       drawText(canvas, datas!.last, 5);
       drawMaxAndMin(canvas, size);
-      drawNowPrice(canvas, size);
+      if (nowPrice != null) {
+        drawNowPrice(nowPrice!, canvas, size);
+      }
 
       if (isLongPress == true) {
         drawCrossLine(canvas, size);
@@ -143,7 +147,7 @@ abstract class BaseChartPainter extends CustomPainter {
   void drawMaxAndMin(Canvas canvas, Size size);
 
   //画当前价格
-  void drawNowPrice(Canvas canvas, Size size);
+  void drawNowPrice(double value, Canvas canvas, Size size);
 
   //画交叉线
   void drawCrossLine(Canvas canvas, Size size);

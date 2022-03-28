@@ -35,6 +35,7 @@ class ChartPainter extends BaseChartPainter {
     this.chartStyle,
     this.chartColors, {
     required datas,
+    required nowPrice,
     required scaleX,
     required scrollX,
     required isLongPass,
@@ -52,6 +53,7 @@ class ChartPainter extends BaseChartPainter {
   }) : super(
           chartStyle,
           datas: datas,
+          nowPrice: nowPrice,
           scaleX: scaleX,
           scrollX: scrollX,
           isLongPress: isLongPass,
@@ -346,7 +348,7 @@ class ChartPainter extends BaseChartPainter {
   }
 
   @override
-  void drawNowPrice(Canvas canvas, Size size) {
+  void drawNowPrice(double value, Canvas canvas, Size size) {
     if (!this.showNowPrice) {
       return;
     }
@@ -355,7 +357,6 @@ class ChartPainter extends BaseChartPainter {
       return;
     }
 
-    double value = datas!.last.close;
     double y = getMainY(value);
     // Do not draw in the view display area
     if (y > getMainY(mMainLowMinValue) || y < getMainY(mMainHighMaxValue)) {
