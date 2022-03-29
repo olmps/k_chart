@@ -29,7 +29,7 @@ class TimeFormat {
 
 class KChartWidget extends StatefulWidget {
   final List<KLineEntity>? datas;
-  final double nowPrice;
+  final double? nowPrice;
   final MainState mainState;
   final bool volHidden;
   final SecondaryState secondaryState;
@@ -60,7 +60,7 @@ class KChartWidget extends StatefulWidget {
     this.datas,
     this.chartStyle,
     this.chartColors, {
-    required this.nowPrice,
+    this.nowPrice,
     this.mainState = MainState.MA,
     this.secondaryState = SecondaryState.MACD,
     this.onSecondaryTap,
